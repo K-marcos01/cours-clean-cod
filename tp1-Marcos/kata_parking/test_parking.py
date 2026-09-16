@@ -25,3 +25,11 @@ def test_stationnement_de_10_heures_est_plafonne_a_18_euros():
     montant = calculer_montant(entree, sortie)
 
     assert montant == 18
+
+def test_stationnement_de_25_heures_plafonne_a_deux_tranches():
+    entree = datetime(2024, 1, 1, 8, 0)
+    sortie = datetime(2024, 1, 2, 9, 0)  # 25 heures plus tard
+
+    montant = calculer_montant(entree, sortie)
+
+    assert montant == 36
