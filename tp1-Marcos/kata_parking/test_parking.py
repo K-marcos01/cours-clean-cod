@@ -67,3 +67,19 @@ def test_stationnement_de_73_heures_est_un_forfait_fourriere():
     montant = calculer_montant(entree, sortie)
 
     assert montant == 250
+
+def test_stationnement_de_72_heures_exactement_nest_pas_fourriere():
+    entree = datetime(2024, 1, 1, 8, 0)
+    sortie = datetime(2024, 1, 4, 8, 0)  # exactement 72 heures
+
+    montant = calculer_montant(entree, sortie)
+
+    assert montant == 54
+
+def test_fourriere_ignore_abonnement_et_electrique():
+    entree = datetime(2024, 1, 1, 8, 0)
+    sortie = datetime(2024, 1, 4, 9, 0)  # 73 heures
+
+    montant = calculer_montant(entree, sortie, abonne=True, electrique=True)
+
+    assert montant == 250
