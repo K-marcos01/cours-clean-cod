@@ -10,6 +10,11 @@ FRANCHISE_ELECTRIQUE = 60
 
 
 def calculer_montant(entree, sortie, abonne=False, electrique=False):
+    if sortie < entree:
+        raise ValueError(
+            "l'heure de sortie ne peut pas etre anterieure a l'heure d'entree"
+        )
+
     duree = sortie - entree
     minutes = duree.total_seconds() / 60
 
