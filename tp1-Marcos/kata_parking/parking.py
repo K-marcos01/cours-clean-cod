@@ -11,7 +11,10 @@ FOURRIERE_SEUIL_HEURES = 72
 FOURRIERE_FORFAIT = 250
 
 
-def calculer_montant(entree, sortie, abonne=False, electrique=False):
+def calculer_montant(entree, sortie=None, abonne=False, electrique=False, maintenant=None):
+    if sortie is None:
+        sortie = maintenant
+
     if sortie < entree:
         raise ValueError(
             "l'heure de sortie ne peut pas etre anterieure a l'heure d'entree"
