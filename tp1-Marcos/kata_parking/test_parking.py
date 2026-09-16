@@ -59,3 +59,11 @@ def test_sortie_avant_entree_leve_une_erreur():
 
     with pytest.raises(ValueError, match="sortie"):
         calculer_montant(entree, sortie)
+
+def test_stationnement_de_73_heures_est_un_forfait_fourriere():
+    entree = datetime(2024, 1, 1, 8, 0)
+    sortie = datetime(2024, 1, 4, 9, 0)  # 73 heures plus tard
+
+    montant = calculer_montant(entree, sortie)
+
+    assert montant == 250
