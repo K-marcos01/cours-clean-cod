@@ -41,3 +41,11 @@ def test_camion_abonne_paie_soixante_pourcent():
     montant = calculer_montant(entree, sortie, abonne=True)
 
     assert montant == 0.90
+
+def test_camion_electrique_a_60_minutes_gratuites():
+    entree = datetime(2024, 1, 1, 8, 0)
+    sortie = datetime(2024, 1, 1, 9, 0)  # 60 minutes
+
+    montant = calculer_montant(entree, sortie, electrique=True)
+
+    assert montant == 0
