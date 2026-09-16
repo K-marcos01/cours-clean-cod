@@ -7,6 +7,8 @@ MINUTES_PAR_JOUR = 24 * 60
 REMISE_ABONNE = 0.60
 FRANCHISE_NORMALE = 30
 FRANCHISE_ELECTRIQUE = 60
+FOURRIERE_SEUIL_HEURES = 72
+FOURRIERE_FORFAIT = 250
 
 
 def calculer_montant(entree, sortie, abonne=False, electrique=False):
@@ -17,6 +19,9 @@ def calculer_montant(entree, sortie, abonne=False, electrique=False):
 
     duree = sortie - entree
     minutes = duree.total_seconds() / 60
+
+    if minutes > FOURRIERE_SEUIL_HEURES * 60:
+        return FOURRIERE_FORFAIT
 
     franchise = FRANCHISE_ELECTRIQUE if electrique else FRANCHISE_NORMALE
 
