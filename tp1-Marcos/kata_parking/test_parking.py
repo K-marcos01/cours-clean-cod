@@ -83,3 +83,11 @@ def test_fourriere_ignore_abonnement_et_electrique():
     montant = calculer_montant(entree, sortie, abonne=True, electrique=True)
 
     assert montant == 250
+
+def test_camion_encore_stationne_utilise_instant_present():
+    entree = datetime(2024, 1, 1, 8, 0)
+    maintenant = datetime(2024, 1, 1, 8, 45)
+
+    montant = calculer_montant(entree, maintenant=maintenant)
+
+    assert montant == 1.50
