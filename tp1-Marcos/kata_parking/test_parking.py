@@ -33,3 +33,11 @@ def test_stationnement_de_25_heures_plafonne_a_deux_tranches():
     montant = calculer_montant(entree, sortie)
 
     assert montant == 36
+
+def test_camion_abonne_paie_soixante_pourcent():
+    entree = datetime(2024, 1, 1, 8, 0)
+    sortie = datetime(2024, 1, 1, 8, 31)
+
+    montant = calculer_montant(entree, sortie, abonne=True)
+
+    assert montant == 0.90
