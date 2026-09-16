@@ -17,3 +17,11 @@ def test_stationnement_de_45_minutes_facture_une_demi_heure():
     montant = calculer_montant(entree, sortie)
 
     assert montant == 1.50
+
+def test_stationnement_de_10_heures_est_plafonne_a_18_euros():
+    entree = datetime(2024, 1, 1, 8, 0)
+    sortie = datetime(2024, 1, 1, 18, 0)
+
+    montant = calculer_montant(entree, sortie)
+
+    assert montant == 18
