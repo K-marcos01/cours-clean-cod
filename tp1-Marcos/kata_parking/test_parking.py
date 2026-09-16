@@ -49,3 +49,13 @@ def test_camion_electrique_a_60_minutes_gratuites():
     montant = calculer_montant(entree, sortie, electrique=True)
 
     assert montant == 0
+
+import pytest
+
+
+def test_sortie_avant_entree_leve_une_erreur():
+    entree = datetime(2024, 1, 1, 9, 0)
+    sortie = datetime(2024, 1, 1, 8, 0)  # avant l'entree
+
+    with pytest.raises(ValueError, match="sortie"):
+        calculer_montant(entree, sortie)
