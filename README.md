@@ -16,14 +16,14 @@ tp1/                    5 h, audit, TDD strict, refactoring sous tests
   modeles/              le squelette du rapport qualité
   outils/               vérification de l'historique TDD
 
-jour2/                  SOLID et patrons de conception
-  cours-jour2.md        support Marp, 100 slides, environ 3 h
+jour2/                  les cinq principes SOLID
+  cours-jour2.md        support Marp, 94 slides, environ 3 h
   cours-jour2.pdf       le même, exporté
-  img/                  les 6 schémas SVG
-  demos/                les 3 démonstrations reproductibles
-tp2/                    5 h, ouvrir puis étendre sans rien modifier
+  img/                  les 8 schémas SVG
+  demos/                les 4 démonstrations
+tp2/                    5 h, cinq violations dans un code en service
   README.md             l'énoncé des 6 missions et le barème
-  depart/               le matériel de la mission 5
+  depart/               l'application de facturation, 25 tests verts
   modeles/              le squelette du rapport de conception
   outils/               vérification de l'extension additive
 ```
@@ -62,8 +62,8 @@ Le second se termine en lançant le vrai script de correction du TP2.
 
 ## Le corrigé du TP1
 
-Il vit sur une branche, `tp1-corrige`, qui contient **41 commits réels** rejouant les
-missions 0, 1 et 2 comme un étudiant les aurait faites.
+Il vit sur une branche, `tp1-corrige`, qui contient **90 commits réels** rejouant les
+cinq missions comme un étudiant les aurait faites.
 
 ```bash
 git log --oneline origin/tp1-corrige
@@ -71,10 +71,11 @@ git worktree add ../tp1-corrige tp1-corrige   # l'ouvrir a cote, sans quitter ma
 ```
 
 Chaque commit a été vérifié au moment où il a été créé : un `red:` qui passerait au
-vert arrête la génération. Les commits sont horodatés de 9h05 à 11h40, écart médian
-de trois minutes.
+vert arrête la génération. Les commits sont horodatés de 9h05 à 14h35, écart médian
+de trois minutes, sur 395 minutes. Le corrigé passe le script de correction sans
+aucun signalement.
 
-Le script qui produit cette branche est `tp1/correction/rejouer-missions-0-1-2.sh`, et
+Les scripts qui produisent cette branche sont dans `tp1/correction/`, et
 `tp1/correction/README.md` liste les trois moments à montrer au tableau pendant le
 débrief.
 
@@ -94,6 +95,7 @@ ligne supprimée dans un fichier métier existant.
 | Jour | Sujet | État |
 |---|---|---|
 | 1 | Craftsmanship, clean code, indicateurs, outils, TDD unitaire | fait |
-| 2 | SOLID, familles du GoF, six patrons, quand ne pas les utiliser | fait |
+| 2 | Les cinq principes SOLID, un par un, sur une application en service | fait |
 | 3 | Code legacy, tests de caractérisation, coutures, odeurs, débogage | à produire |
+| ? | **Patrons de conception du GoF**, objectif du module encore sans créneau | à placer |
 | 4 | Stratégie de tests, intégration et bout en bout, CI/CD, éco-conception | à produire |

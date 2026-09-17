@@ -45,7 +45,7 @@ style: |
 
 # Crafting Code
 ## Jour 2
-### SOLID et les patrons de conception
+### Les cinq principes SOLID
 
 Badmavasan KIROUCHENASSAMY
 CODA
@@ -55,11 +55,11 @@ CODA
 ## Ce que vous saurez faire ce soir
 ### Les cinq sorties de la journée
 
-- **Diagnostiquer** une conception rigide sans lire une ligne de métier
-- **Expliquer** les cinq principes SOLID et le test que chacun rend possible
-- **Situer** les trois familles du GoF et les 23 patrons
-- **Appliquer** six patrons courants, en version classique et en version Python
-- **Refuser** un patron quand il coûte plus qu'il ne rapporte
+- **Diagnostiquer** une conception rigide sans connaître le métier
+- **Énoncer** chacun des cinq principes, et dire ce qu'il **ne veut pas** dire
+- **Repérer** une violation sur du code réel, avec des signes concrets
+- **Corriger** en petits pas, sans casser les tests existants
+- **Refuser** d'appliquer un principe quand il coûte plus qu'il ne rapporte
 
 ---
 
@@ -69,9 +69,9 @@ CODA
 | Réglé hier | Pas encore réglé |
 |---|---|
 | des noms qui disent l'intention | où placer les frontières entre modules |
-| des fonctions courtes et testées | comment ajouter sans casser |
+| des fonctions courtes et testées | comment ajouter sans rouvrir |
 | la complexité mesurée et bornée | comment remplacer un composant |
-| des bugs prouvés avant correction | comment tester ce qui touche le disque |
+| des bugs prouvés avant correction | comment tester ce qui touche le réseau |
 
 > Hier c'était l'échelle de la **ligne** et de la **fonction**. Aujourd'hui, l'échelle du **module**.
 
@@ -82,11 +82,14 @@ CODA
 
 | Bloc | Durée | Contenu |
 |---|---|---|
-| Acte 1 | 35 min | Pourquoi du code propre peut rester impossible à faire évoluer |
-| Acte 2 | 65 min | Les cinq principes SOLID, un par un |
-| Acte 3 | 60 min | Six patrons du GoF, en classique et en Python |
-| Acte 4 | 20 min | Quand un patron est une erreur |
-| TP2 | 5 h | Ajouter trois règles sans modifier une ligne existante |
+| Acte 1 | 25 min | Pourquoi du code propre peut rester impossible à faire évoluer |
+| Acte 2 | 28 min | **S**, une seule raison de changer |
+| Acte 3 | 33 min | **O**, ouvert à l'extension |
+| Acte 4 | 28 min | **L**, la substitution |
+| Acte 5 | 22 min | **I**, des interfaces à la taille du besoin |
+| Acte 6 | 28 min | **D**, l'inversion des dépendances |
+| Acte 7 | 16 min | Synthèse, et quand ne pas appliquer |
+| TP2 | 5 h | Cinq violations dans un code en service, à vous de jouer |
 
 ---
 
@@ -98,30 +101,28 @@ CODA
 
 ---
 
-## Le code d'hier
-### Ce que vous avez rendu au TP1
+## Le code du TP2
+### Ce que vous allez recevoir cet après-midi
 
 | Mesure | Valeur |
 |---|---|
-| Tests | 76 |
-| Couverture de branches | 99 % |
-| Complexité maximale | A (4) |
-| Complexité moyenne | A (1.9) |
+| Tests | 25, tous verts |
+| Complexité maximale | A |
+| Complexité moyenne | A (1.70) |
 | Problèmes ruff | 0 |
 | Fonctions de plus de 20 lignes | 0 |
+| Noms compréhensibles sans commentaire | oui |
 
-> Sur tous les critères du jour 1, ce code est **irréprochable**. Regardons ce qui se passe quand la responsable logistique arrive lundi matin.
+> Sur **tous** les critères d'hier, ce code est irréprochable. Regardons ce qui se passe quand le commercial arrive lundi matin.
 
 ---
 
 ## Démo 1
-### La demande du lundi matin
+### Trois demandes, toutes légitimes, toutes petites
 
-Trois demandes, toutes légitimes, toutes petites.
-
-- Ajouter un niveau **préalerte**, entre `alerte` et `normal`
-- Ajouter un **deuxième palier de remise** à partir de 500 unités
-- Exporter le rapport en **CSV** en plus du JSON
+- Ajouter une formule **`decouverte`** à 4 euros par poste
+- Ajouter un code promo **`RENTREE`**, 10 % en septembre
+- Envoyer la facture par **SMS** en plus du courriel
 
 > Chronométrez-moi. Et surtout, comptez les fichiers que je dois **rouvrir**.
 
@@ -129,109 +130,77 @@ Trois demandes, toutes légitimes, toutes petites.
 
 <!-- _class: compare -->
 
-## Demande 1, le niveau préalerte
+## Demande 1, la formule découverte
 ### Il faut rouvrir une fonction qui marchait
 
 #### Ce qui existe
 
 ```python
-def niveau_alerte(article):
-    if article.quantite == 0:
-        return "rupture"
-    if article.quantite * 2 <= article.seuil_alerte:
-        return "critique"
-    if article.est_en_alerte:
-        return "alerte"
-    return "normal"
+def prix_par_poste(formule):
+    if formule == FORMULE_ESSENTIEL:
+        return 9.0
+    if formule == FORMULE_PRO:
+        return 19.0
+    if formule == FORMULE_ENTREPRISE:
+        return 39.0
+    raise FormuleInconnue(formule)
 ```
 
 #### Ce qu'il faut faire
 
 ```python
-def niveau_alerte(article):
-    if article.quantite == 0:
-        return "rupture"
-    if article.quantite * 2 <= article.seuil_alerte:
-        return "critique"
-    if article.est_en_alerte:
-        return "alerte"
-    if article.quantite <= article.seuil_alerte * 2:
-        return "prealerte"          # nouveau
-    return "normal"
+def prix_par_poste(formule):
+    if formule == FORMULE_DECOUVERTE:   # nouveau
+        return 4.0                      # nouveau
+    if formule == FORMULE_ESSENTIEL:
+        return 9.0
+    if formule == FORMULE_PRO:
+        return 19.0
+    if formule == FORMULE_ENTREPRISE:
+        return 39.0
+    raise FormuleInconnue(formule)
 ```
 
-> Une fonction **testée et en production** est rouverte pour une règle qui ne la concernait pas. Tous ses tests doivent être rejoués.
+> Une fonction **testée et en production** est rouverte pour une formule qui ne la concernait pas. Ses 4 tests doivent être rejoués.
 
 ---
 
 <!-- _class: compare -->
 
-## Demande 2, le deuxième palier de remise
-### Une règle métier arrive, une fonction stable est éditée
+## Demande 3, l'envoi par SMS
+### Le métier apprend un deuxième canal
 
 #### Ce qui existe
 
 ```python
-def cout_de_reapprovisionnement(article):
-    quantite = quantite_a_commander(article)
-    if quantite == 0:
-        return 0.0
-    cout = quantite * article.prix_unitaire
-    if quantite >= 100:
-        cout *= 0.90
-    return round(cout, 2)
-```
+class EmetteurDeFactures:
+    def __init__(self):
+        self.passerelle = ClientSMTP()
 
-#### Ce qu'il faut faire
-
-```python
-def cout_de_reapprovisionnement(article):
-    quantite = quantite_a_commander(article)
-    if quantite == 0:
-        return 0.0
-    cout = quantite * article.prix_unitaire
-    if quantite >= 500:          # nouveau
-        cout *= 0.80             # nouveau
-    elif quantite >= 100:        # modifié
-        cout *= 0.90
-    return round(cout, 2)
-```
-
-> Notez le `elif`. Une ligne qui marchait a changé de nature. C'est exactement le genre de modification qui introduit une régression silencieuse.
-
----
-
-<!-- _class: compare -->
-
-## Demande 3, l'export CSV
-### Le métier apprend un nouveau format de fichier
-
-#### Ce qui existe
-
-```python
-def exporter_rapport(rapport, chemin):
-    with open(chemin, "w", encoding="utf-8") as f:
-        json.dump(asdict(rapport), f,
-                  ensure_ascii=False, indent=2)
+    def emettre(self, abonnement, adresse, ...):
+        ...
+        self.passerelle.envoyer_courriel(
+            adresse, sujet, corps
+        )
 ```
 
 #### Ce qu'on va écrire, avouons-le
 
 ```python
-def exporter_rapport(rapport, chemin, format="json"):
-    if format == "json":
-        with open(chemin, "w", encoding="utf-8") as f:
-            json.dump(asdict(rapport), f)
-    elif format == "csv":
-        with open(chemin, "w", encoding="utf-8") as f:
-            ecrivain = csv.writer(f)
-            ecrivain.writerow(asdict(rapport).keys())
-            ecrivain.writerow(asdict(rapport).values())
-    else:
-        raise ValueError(format)
+    def emettre(self, abonnement, adresse,
+                canal="courriel", ...):
+        ...
+        if canal == "courriel":
+            self.passerelle.envoyer_courriel(
+                adresse, sujet, corps
+            )
+        elif canal == "sms":
+            self.passerelle.envoyer_sms(
+                adresse, corps
+            )
 ```
 
-> Un paramètre `format` avec un `if` dedans. On l'a tous écrit. Et dans six mois il y aura Excel, puis l'envoi par mail, puis le dépôt S3.
+> Sauf que `ClientSMTP.envoyer_sms` lève `NotImplementedError`. On va donc aussi toucher à la passerelle. Deux fichiers pour un canal.
 
 ---
 
@@ -240,13 +209,13 @@ def exporter_rapport(rapport, chemin, format="json"):
 
 | Demande | Fichiers rouverts | Fonctions modifiées | Tests à rejouer |
 |---|---|---|---|
-| Niveau préalerte | 2 | 2 | 43 |
-| Palier de remise | 1 | 1 | 43 |
-| Export CSV | 1 | 1 | 43 |
+| Formule découverte | 2 | 2 | 25 |
+| Code promo RENTREE | 1 | 1 | 25 |
+| Envoi par SMS | 2 | 2 | 25 |
 
 - Aucune de ces trois demandes n'ajoute de la **complexité métier**
 - Les trois obligent à toucher du code **qui marchait**
-- Et le module de stock n'a que **190 lignes**
+- Et l'application ne fait que **200 lignes**
 
 > Imaginez le même exercice sur 40 000 lignes.
 
@@ -267,7 +236,7 @@ def exporter_rapport(rapport, chemin, format="json"):
 - **Immobilité** : vous réécrivez une fonction qui existe déjà, parce que l'extraire est trop cher
 - **Viscosité** : vous savez comment faire proprement, et vous ne le faites pas
 
-> Ces quatre mots vous serviront plus en réunion que les 23 patrons du GoF.
+> Ces quatre mots vous serviront plus en réunion que les cinq lettres de SOLID.
 
 ---
 
@@ -280,7 +249,7 @@ La conception, ce n'est pas choisir des classes. C'est décider **où passent le
 - Qu'est-ce qui a le droit de traverser ?
 - Qu'est-ce qui change **ensemble**, et qu'est-ce qui change **séparément** ?
 
-> Tout SOLID, tout le GoF, tout ce qu'on voit aujourd'hui répond à ces trois questions.
+> Les cinq principes d'aujourd'hui répondent tous à ces trois questions.
 
 ---
 
@@ -313,7 +282,7 @@ grep -rn "^from \|^import " --include="*.py" . | grep -v test_
 
 - Un module qui importe **8 autres modules** métier a 8 raisons de casser
 - Un module que **personne** n'importe est soit mort, soit mal nommé
-- Un import qui remonte du bas vers le haut (le métier importe la base) est une **inversion manquée**
+- Un import qui va du métier vers un détail technique est une **inversion manquée**
 
 > Le graphe de vos imports est le vrai plan de votre application. Pas le schéma sur le mur.
 
@@ -327,9 +296,9 @@ grep -rn "^from \|^import " --include="*.py" . | grep -v test_
 #### Héritage : est un
 
 ```python
-class ArticleSoldé(Article):
-    def prix(self):
-        return super().prix() * 0.7
+class AbonnementAnnuel(Abonnement):
+    def resilier(self, a_partir_de):
+        raise ResiliationImpossible(...)
 ```
 
 - Relation figée à l'écriture
@@ -339,19 +308,21 @@ class ArticleSoldé(Article):
 #### Composition : a un
 
 ```python
-class Article:
-    def __init__(self, tarification):
-        self.tarification = tarification
+class Abonnement:
+    def __init__(self, politique):
+        self.politique = politique
 
-    def prix(self):
-        return self.tarification.prix_de(self)
+    def resilier(self, a_partir_de):
+        return self.politique.resilier(
+            self, a_partir_de
+        )
 ```
 
 - Relation choisie à l'exécution
 - On ne prend que ce dont on a besoin
 - Plusieurs axes possibles
 
-> Règle par défaut du GoF, page 20 du livre : **préférer la composition à l'héritage**. Pas l'interdire, la préférer.
+> Règle par défaut : **préférer la composition à l'héritage**. Pas l'interdire, la préférer. On verra à l'acte 4 pourquoi la colonne de gauche est un piège.
 
 ---
 
@@ -362,276 +333,636 @@ class Article:
 
 **Ce n'est pas** une obligation d'écrire une interface pour chaque classe.
 
-**C'est** cinq questions à se poser au moment où le code résiste.
+**C'est** cinq questions à se poser au moment où le code **résiste**.
 
 > Un code qui ne change jamais n'a pas besoin de SOLID. Le jour où il change, SOLID vous dit **pourquoi ça fait mal**.
-
----
-
-<!-- _class: lead -->
-
-# Acte 2
-## SOLID
-### Cinq principes, cinq questions
 
 ---
 
 ## D'où ça vient
 ### Deux auteurs, treize ans d'écart
 
-- Robert C. Martin rassemble les cinq principes vers **2000**, dans un article sur les principes de conception orientée objet
+- Robert C. Martin rassemble les cinq principes vers **2000**
 - Michael Feathers propose l'acronyme **SOLID** quelques années plus tard
-- Deux des cinq sont plus anciens : **OCP** vient de Bertrand Meyer, 1988, et **LSP** de Barbara Liskov, 1987
+- Deux des cinq sont plus anciens : **OCP** vient de Bertrand Meyer, **1988**, et **LSP** de Barbara Liskov, **1987**
 
 > Ce ne sont pas des inventions récentes. Ce sont des constats faits dans les années 80 sur ce qui rendait les systèmes impossibles à maintenir.
 
 ---
 
-## S comme Single Responsibility
-### L'énoncé
+<!-- _class: lead -->
 
-> Une classe ne doit avoir **qu'une seule raison de changer**.
-
-Reformulation de Martin, plus claire :
-
-> Un module doit être responsable devant **un seul acteur**.
-
-Un acteur, c'est une personne ou un service qui peut demander un changement. La comptabilité, la logistique, le service juridique, l'équipe front.
+# S
+## Single Responsibility
+### Une seule raison de changer
 
 ---
 
-## La mauvaise lecture de SRP
-### « Une fonction doit faire une seule chose »
+## L'énoncé
+### Deux formulations du même principe
 
-Ça, c'est le jour 1. C'est vrai, et ce n'est pas SRP.
+La version de 1972, due à David Parnas, puis reprise par Robert C. Martin :
 
-SRP ne parle pas de la **taille** du code, il parle de **qui vous appelle quand ça doit changer**.
+> Une classe ne doit avoir qu'**une seule raison de changer**.
 
-- Une classe de 300 lignes qui ne sert qu'à la comptabilité respecte SRP
-- Une classe de 20 lignes qui sert à la fois à la logistique et au juridique le viole
+La reformulation de Martin, bien plus utilisable :
 
-> La question n'est pas « combien de choses fait ce code ». C'est « combien de personnes différentes peuvent me demander de le modifier ».
+> Un module doit être responsable devant **un seul acteur**.
+
+Un **acteur**, c'est une personne ou un service qui a le pouvoir de vous demander une modification. La comptabilité, la direction, le juridique, l'équipe front, l'exploitation.
+
+---
+
+## Ce que SRP ne veut pas dire
+### L'erreur la plus répandue sur les cinq principes
+
+« Une fonction doit faire une seule chose. » Ça, c'est le **jour 1**. C'est vrai, et ce n'est pas SRP.
+
+SRP ne parle pas de la **taille** du code. Il parle de **qui vous appelle quand ça doit changer**.
+
+- Une classe de 300 lignes qui ne sert qu'à la comptabilité **respecte** SRP
+- Une fonction de 15 lignes qui sert à la fois au juridique et au marketing le **viole**
+
+> La question n'est pas « combien de choses fait ce code ». C'est « **combien de personnes différentes** peuvent me demander de le modifier ».
+
+---
+
+## Le module tiraillé
+### Trois acteurs, un seul fichier
+
+![w:880 center](img/srp-acteurs.svg)
 
 ---
 
 <!-- _class: compare -->
 
-## SRP sur le code d'hier
-### Trois acteurs dans un seul fichier
+## Exemple 1, l'émetteur de factures
+### Le code du TP de cet après-midi
 
-#### Ce qu'on a
+#### Ce qu'il fait
 
 ```python
-# rapport.py
-def generer_rapport(articles, date): ...
-    # la logistique décide du contenu
-
-def formater_rapport(rapport): ...
-    # la direction décide de la présentation
-
-def exporter_rapport(rapport, chemin): ...
-    # l'informatique décide du format de fichier
+def emettre(self, abonnement, adresse, ...):
+    emise_le = datetime.now().date()
+    facture = Facture(
+        numero=self.numeroter(emise_le),
+        montant_ht=montant_hors_taxe(...),
+        montant_ttc=montant_toutes_taxes(...),
+    )
+    corps = "\n".join([
+        f"Facture {facture.numero}",
+        f"Montant HT : {facture.montant_ht:.2f}",
+    ])
+    self.passerelle.envoyer_courriel(
+        adresse, sujet, corps
+    )
+    return facture
 ```
 
 #### Trois raisons de changer
 
 | Qui demande | Ce qu'il change |
 |---|---|
-| Logistique | les seuils, les alertes |
-| Direction | la mise en forme |
-| Informatique | JSON, CSV, base |
+| Comptabilité | les montants, la TVA |
+| Direction | la présentation, le logo |
+| Informatique | le canal d'envoi |
 
-Trois acteurs, trois rythmes, **un seul fichier**.
+Trois acteurs, trois rythmes, **une seule méthode**.
 
-> Le jour où la direction veut une autre présentation, on rouvre le fichier qui contient le calcul métier. C'est de la fragilité fabriquée.
+> Le jour où la direction veut une autre présentation, on rouvre la méthode qui contient le calcul des montants. C'est de la fragilité fabriquée.
 
 ---
 
 <!-- _class: compare -->
 
-## SRP appliqué
-### Trois fichiers, trois rythmes de changement
+## Exemple 2, le point d'entrée HTTP
+### Le cas que vous rencontrerez le plus souvent
 
-#### Avant
-
-```
-rapport.py
-  generer_rapport()
-  formater_rapport()
-  exporter_rapport()
-```
-
-Un fichier, trois acteurs, trois raisons de changer.
-
-#### Après
-
-```
-calcul/rapport.py
-  generer_rapport()        logistique
-
-presentation/texte.py
-  formater()               direction
-
-infrastructure/fichier.py
-  DisqueLocal.deposer()    informatique
-```
-
-Le sens des dépendances : `presentation` et `infrastructure` connaissent `calcul`. **Jamais l'inverse.**
-
-> Le test de SRP au quotidien : quand un ticket arrive, pouvez-vous dire en trois secondes quel fichier ouvrir ?
-
----
-
-## Ce que SRP vous rend
-### Un test qui devient trivial
-
-Une fois séparés, le calcul se teste **sans rien mettre en forme**, et la mise en forme se teste **sans rien calculer**.
+#### Quatre métiers dans une fonction
 
 ```python
-def test_le_rapport_compte_les_articles():
-    assert generer_rapport([un_article()], date(2026, 1, 1)).nombre_d_articles == 1
-
-def test_le_format_affiche_aucune_quand_il_n_y_a_pas_d_alerte():
-    assert "aucune" in formater(rapport_sans_alerte())
+def poster_commande(requete):
+    if "client" not in requete.json:
+        return 400, {"erreur": "client manquant"}
+    total = sum(
+        l["prix"] * l["qte"]
+        for l in requete.json["lignes"]
+    )
+    if total > 1000:
+        total *= 0.95
+    journal.info("commande de %s", total)
+    return 201, {"total": round(total, 2)}
 ```
 
-> Si tester une règle métier vous oblige à construire une chaîne de caractères, SRP est violé.
+#### Qui peut demander quoi
+
+| Acteur | Demande typique |
+|---|---|
+| L'équipe front | le format des erreurs |
+| Le commercial | le seuil de remise |
+| L'exploitation | le format des journaux |
+| L'architecte | le code HTTP renvoyé |
+
+> Quatre acteurs sur douze lignes. La remise commerciale est enfermée dans une fonction que personne d'autre ne peut réutiliser.
 
 ---
 
-## O comme Open Closed
-### L'énoncé, Bertrand Meyer, 1988
+<!-- _class: compare -->
+
+## Exemple 3, l'objet qui se sauvegarde lui-même
+### Le grand classique des frameworks
+
+#### Le métier connaît la base
+
+```python
+class Client:
+    def __init__(self, nom, email):
+        self.nom = nom
+        self.email = email
+
+    def est_majeur(self):
+        ...
+
+    def sauvegarder(self):
+        curseur = connexion.cursor()
+        curseur.execute(
+            "INSERT INTO clients ...",
+            (self.nom, self.email),
+        )
+```
+
+#### Les acteurs
+
+- Le **métier** décide de `est_majeur`
+- L'**exploitation** décide du schéma de base
+- Ils ne changent **jamais** en même temps
+
+Conséquence immédiate : tester `est_majeur` demande une base de données.
+
+> C'est le motif Active Record. Il est pratique, très répandu, et il viole SRP par construction. Savoir que c'est un compromis vaut mieux que l'ignorer.
+
+---
+
+## Comment détecter une violation de SRP
+### Cinq signes, du plus visible au plus subtil
+
+- Le nom de la classe contient **et**, ou un mot fourre-tout : `Gestionnaire`, `Service`, `Utils`, `Helper`
+- La liste des imports mélange du **métier** et de la **technique** : `decimal` et `smtplib` dans le même fichier
+- Deux tickets sans rapport pointent vers le **même fichier**
+- Pour tester une règle métier, il faut **monter** une base, un serveur, ou fabriquer une chaîne de caractères
+- Deux personnes de services différents modifient le fichier la **même semaine**
+
+> Le dernier signe est le plus fiable, et il est dans votre historique git.
+
+---
+
+## Le test que SRP débloque
+### La règle métier se teste sans le décor
+
+```python
+# avant : il faut capturer la sortie, donc monter tout le décor
+def test_le_montant_est_correct(capsys):
+    facture = EmetteurDeFactures().emettre(abonnement(), "x@y.fr")
+    capsys.readouterr()
+    assert facture.montant_ht == 57.0
+
+# après : deux lignes, aucune mise en forme, aucun envoi
+def test_le_montant_est_correct():
+    assert montant_hors_taxe(abonnement()) == 57.0
+```
+
+> Si tester une règle métier vous oblige à construire une chaîne de caractères ou à capturer une sortie, SRP est violé. Le rapport de couverture le dit avant vous.
+
+---
+
+## Le piège inverse
+### Découper jusqu'où
+
+SRP ne dit pas « une classe par méthode ». Poussé à l'absurde, il produit des dizaines de fichiers d'une fonction, et personne ne retrouve rien.
+
+Le critère d'arrêt est le même que le critère de départ : **un acteur**.
+
+- Le calcul de la TVA et le calcul de la remise ont le même acteur, la comptabilité. Ils peuvent cohabiter.
+- Le calcul de la remise et le format du courriel n'ont pas le même acteur. Ils se séparent.
+
+> Si vous ne savez pas nommer l'acteur, ne découpez pas. Attendez le deuxième ticket.
+
+---
+
+## Mini-activité, 4 minutes
+### En binôme, listez les acteurs
+
+```python
+class RapportMensuel:
+    def collecter(self, debut, fin): ...
+    def calculer_chiffre_d_affaires(self): ...
+    def calculer_marge(self): ...
+    def formater_en_pdf(self): ...
+    def envoyer_au_comite(self, adresses): ...
+    def archiver_sur_s3(self): ...
+```
+
+Pour chaque méthode, **qui** peut demander de la modifier ?
+
+> Combien de fichiers faudrait-il, et où passe la frontière ? Réponse dans trois minutes.
+
+---
+
+## La correction
+### Trois acteurs, donc trois modules
+
+| Méthode | Acteur | Va dans |
+|---|---|---|
+| `collecter` | l'architecte des données | `infrastructure/` |
+| `calculer_chiffre_d_affaires` | la direction financière | `metier/` |
+| `calculer_marge` | la direction financière | `metier/` |
+| `formater_en_pdf` | la communication | `presentation/` |
+| `envoyer_au_comite` | l'assistante de direction | `presentation/` |
+| `archiver_sur_s3` | l'exploitation | `infrastructure/` |
+
+Le sens des dépendances : `presentation` et `infrastructure` connaissent `metier`. **Jamais l'inverse.**
+
+> Deux méthodes ont le même acteur, elles restent ensemble. SRP n'a jamais demandé six fichiers.
+
+---
+
+<!-- _class: lead -->
+
+# O
+## Open Closed
+### Ouvert à l'extension, fermé à la modification
+
+---
+
+## L'énoncé
+### Bertrand Meyer, 1988
 
 > Un module doit être **ouvert à l'extension** et **fermé à la modification**.
 
-En clair : vous devez pouvoir ajouter un comportement en **ajoutant** du code, pas en **éditant** du code existant.
+La phrase paraît contradictoire. Elle ne l'est pas.
 
-Le critère de vérification est mécanique, et c'est celui du TP de cet après-midi :
+- **Ouvert à l'extension** : on peut lui faire faire des choses nouvelles
+- **Fermé à la modification** : sans rouvrir le fichier qui existe
+
+Autrement dit : ajouter un comportement doit se faire en **ajoutant** du code, pas en **éditant** du code qui marche.
+
+---
+
+## Ce que OCP ne veut pas dire
+### Deux contresens fréquents
+
+**Ce n'est pas** « on ne modifie jamais un fichier existant ». Corriger un bug, c'est modifier. Refactoriser, c'est modifier. OCP parle des **ajouts de comportement**.
+
+**Ce n'est pas** « il faut une interface partout, au cas où ». Ouvrir un point de variation coûte cher. On ouvre là où ça varie, pas ailleurs.
+
+> OCP est un principe d'**anticipation ciblée**, pas d'anticipation générale.
+
+---
+
+## Le critère de vérification
+### Il est mécanique, et c'est celui du TP
 
 ```bash
 git diff --stat
 ```
 
-> Si ajouter une règle produit des lignes supprimées dans un fichier existant, OCP est violé.
+| Ce que vous voyez | Ce que ça dit |
+|---|---|
+| que des fichiers **ajoutés** | OCP respecté |
+| des lignes **supprimées** dans l'existant | OCP violé |
+| des lignes ajoutées dans un fichier d'assemblage | toléré, c'est le branchement |
+
+> Aucun jugement, aucun débat en revue de code. Le diff tranche.
 
 ---
 
 <!-- _class: compare -->
 
-## OCP sur le code d'hier
-### Le if qui grossit contre le registre qui s'étend
+## Exemple 1, le catalogue de formules
+### Le if qui grossit contre la table qui s'étend
 
 #### Fermé à l'extension
 
 ```python
-def niveau_alerte(article):
-    if article.quantite == 0:
-        return "rupture"
-    if article.quantite * 2 <= article.seuil:
-        return "critique"
-    if article.est_en_alerte:
-        return "alerte"
-    return "normal"
+def prix_par_poste(formule):
+    if formule == FORMULE_ESSENTIEL:
+        return 9.0
+    if formule == FORMULE_PRO:
+        return 19.0
+    if formule == FORMULE_ENTREPRISE:
+        return 39.0
+    raise FormuleInconnue(formule)
 ```
 
-Ajouter un niveau = **rouvrir** la fonction.
+Ajouter une formule = **rouvrir** la fonction.
 
 #### Ouvert à l'extension
 
 ```python
-NIVEAUX = []
+CATALOGUE = {}
 
-def niveau(nom, priorite):
-    def enregistrer(predicat):
-        NIVEAUX.append((priorite, nom, predicat))
-        return predicat
-    return enregistrer
 
-def niveau_alerte(article):
-    for _, nom, convient in sorted(NIVEAUX):
-        if convient(article):
-            return nom
-    return "normal"
+def formule(nom, prix_par_poste):
+    CATALOGUE[nom] = prix_par_poste
+
+
+def prix_par_poste(nom):
+    if nom not in CATALOGUE:
+        raise FormuleInconnue(nom)
+    return CATALOGUE[nom]
 ```
 
-Ajouter un niveau = **ajouter** un fichier.
+Ajouter une formule = **une ligne de donnée**.
+
+> Ici, la technique la plus légère suffit : un dictionnaire. Pas d'interface, pas de classe, pas d'héritage.
 
 ---
 
-## Le nouveau niveau, sans toucher à l'ancien code
+## La nouvelle formule, sans toucher à l'ancien code
 ### Un fichier neuf, et c'est tout
 
 ```python
-# niveaux/prealerte.py
-from niveaux import niveau
+# catalogue/decouverte.py
+from facturation.tarifs import formule
 
-@niveau("prealerte", priorite=40)
-def est_en_prealerte(article):
-    return article.quantite <= article.seuil_alerte * 2
+formule("decouverte", prix_par_poste=4.0)
 ```
 
 - Zéro ligne supprimée
 - Zéro ligne modifiée
-- Les 43 tests existants n'ont **aucune raison** d'être rejoués
+- Les 25 tests existants n'ont **aucune raison** d'être rejoués
 
-> C'est exactement ce qui vous est demandé au TP2, et c'est vérifiable par un script.
+> C'est exactement ce qui vous est demandé cet après-midi, et c'est vérifiable par un script.
+
+---
+
+<!-- _class: compare -->
+
+## Exemple 2, les codes promotionnels
+### Quand la variation porte sur un comportement, pas sur une valeur
+
+#### Fermé
+
+```python
+def appliquer_code_promo(montant, code,
+                         premiere_facture):
+    if code is None:
+        return montant
+    if code == "BIENVENUE":
+        if premiere_facture:
+            return max(0.0, montant - 5.0)
+        return montant
+    if code == "NOEL":
+        return montant * 0.85
+    raise CodePromoInconnu(code)
+```
+
+#### Ouvert
+
+```python
+PROMOTIONS = {}
+
+
+def promotion(code):
+    def enregistrer(calcul):
+        PROMOTIONS[code] = calcul
+        return calcul
+    return enregistrer
+
+
+def appliquer_code_promo(montant, code, contexte):
+    if code is None:
+        return montant
+    if code not in PROMOTIONS:
+        raise CodePromoInconnu(code)
+    return PROMOTIONS[code](montant, contexte)
+```
+
+> Chaque promotion devient un fichier de cinq lignes, avec ses propres tests, que personne d'autre ne peut casser.
+
+---
+
+<!-- _class: compare -->
+
+## Exemple 3, la TVA par pays
+### Le cas où OCP ne sert à rien
+
+#### Le code
+
+```python
+def taux_de_tva(pays):
+    if pays == "FR":
+        return 0.20
+    if pays == "BE":
+        return 0.21
+    if pays == "DE":
+        return 0.19
+    raise PaysNonDesservi(pays)
+```
+
+#### Faut-il l'ouvrir ?
+
+- L'entreprise livre dans **trois pays** depuis dix ans
+- Ouvrir un quatrième pays est une décision **commerciale**, pas technique
+- Elle arrive au mieux tous les trois ans
+
+**Non.** Laissez le `if`.
+
+> Le jour où le commercial signe en Espagne, vous ouvrirez, avec les tests qui existent déjà. C'est moins cher que d'avoir ouvert dix ans trop tôt.
 
 ---
 
 ## Les trois façons d'ouvrir un point de variation
-### Par ordre de poids
+### Par ordre de poids, prenez toujours la plus légère
 
-| Technique | Comment | Coût |
-|---|---|---|
-| **Paramètre** | on passe un comportement en argument | quasi nul |
-| **Registre** | un dictionnaire que les modules remplissent à l'import | faible |
-| **Polymorphisme** | un protocole et plusieurs implémentations | réel |
+| Technique | Comment | Coût | Quand |
+|---|---|---|---|
+| **Donnée** | un dictionnaire, une table | quasi nul | la variation est une **valeur** |
+| **Paramètre** | on passe un comportement en argument | faible | la variation est un **calcul** simple |
+| **Polymorphisme** | un protocole, plusieurs implémentations | réel | la variante a un **état** et plusieurs méthodes |
 
-- Commencez toujours par le **paramètre**
-- Passez au **registre** quand les variantes viennent de fichiers séparés
-- Gardez le **polymorphisme** pour les variantes qui ont un état et plusieurs méthodes
-
-> Ouvrir n'oblige pas à créer une hiérarchie de classes. C'est le contresens le plus courant sur OCP.
+> Le contresens le plus courant sur OCP : croire qu'ouvrir oblige à créer une hiérarchie de classes. Dans le TP, deux points de variation sur trois se règlent avec un dictionnaire.
 
 ---
 
 ## L'illusion de OCP
 ### Personne n'est ouvert à tout
 
-Vous ne pouvez pas être ouvert à **toutes** les évolutions possibles. Essayer produit une usine à gaz.
+Vous ne pouvez pas être ouvert à **toutes** les évolutions possibles. Essayer produit une usine à gaz que personne ne comprend.
 
 OCP demande de choisir **un axe de variation** et de l'ouvrir, en connaissance de cause.
 
-- Ouvert aux nouveaux **niveaux d'alerte** : oui, ça change tous les six mois
+- Ouvert aux nouvelles **formules** : oui, le catalogue bouge tous les six mois
 - Ouvert aux nouveaux **systèmes de mesure** : non, on ne passera pas au système impérial
 
-> Le bon usage de OCP vient de l'expérience du domaine, pas de la lecture du principe. En cas de doute, la règle de trois de l'acte 4 tranche.
+> Le bon usage de OCP vient de la connaissance du domaine, pas de la lecture du principe.
 
 ---
 
-## L comme Liskov Substitution
-### L'énoncé, Barbara Liskov, 1987
+## Le moment où ouvrir devient rentable
+### La courbe qu'il faut avoir en tête
 
-> Si `S` est un sous-type de `T`, on doit pouvoir remplacer un `T` par un `S` **sans que le programme s'en aperçoive**.
+![w:840 center](img/cout-indirection.svg)
 
-Autrement dit : un sous-type doit tenir **toutes les promesses** du type parent.
+---
 
-L'exemple du carré et du rectangle est célèbre et ne parle à personne. En voici un que vous rencontrerez.
+## La règle de trois
+### La seule heuristique qui tient
+
+**Première occurrence** : vous écrivez le code.
+
+**Deuxième occurrence** : vous dupliquez, et vous notez que c'est la deuxième.
+
+**Troisième occurrence** : maintenant vous ouvrez, parce que vous voyez enfin ce qui varie **et** ce qui ne varie pas.
+
+> Ouvrir à la première occurrence, c'est deviner l'axe de variation. Vous vous tromperez, et un mauvais point de variation coûte plus cher que trois `if`.
+
+---
+
+## Comment détecter une violation de OCP
+### Quatre signes
+
+- Un `if` ou un `match` sur un **type**, un **code**, un **statut**, qui s'allonge à chaque demande
+- Le même enchaînement de conditions apparaît à **plusieurs endroits**
+- Ajouter un cas oblige à modifier **plus d'un fichier**
+- L'historique git montre le même fichier modifié pour des raisons **sans rapport entre elles**
+
+```bash
+git log --format=format: --name-only | sort | uniq -c | sort -rn | head
+```
+
+> Le fichier en tête de cette liste est votre meilleur candidat.
+
+---
+
+## Le test que OCP débloque
+### Le nouveau cas se teste seul
+
+```python
+# catalogue/test_decouverte.py
+from facturation.tarifs import prix_par_poste
+import catalogue.decouverte  # noqa: F401
+
+
+def test_la_formule_decouverte_coute_quatre_euros():
+    assert prix_par_poste("decouverte") == 4.0
+```
+
+- Un fichier de test **neuf**, à côté d'un fichier de code **neuf**
+- Les 25 tests existants ne sont **pas rejoués** par nécessité, seulement par habitude
+- Si le nouveau cas casse, on sait **immédiatement** lequel
+
+> C'est ce qui rend une base de code à 500 contributeurs praticable.
+
+---
+
+<!-- _class: lead -->
+
+# L
+## Liskov Substitution
+### Un sous-type tient les promesses de son parent
+
+---
+
+## L'énoncé
+### Barbara Liskov, 1987
+
+> Si `S` est un sous-type de `T`, alors on doit pouvoir remplacer un `T` par un `S` **sans que le programme s'en aperçoive**.
+
+Traduction utilisable : un sous-type doit tenir **toutes les promesses** du type parent.
+
+Le mot important est **promesse**. Pas « avoir les mêmes méthodes », le compilateur s'en charge. Tenir le même **contrat**, ce que le compilateur ne vérifie pas.
+
+---
+
+## Ce que LSP ne veut pas dire
+### Le malentendu vient du vocabulaire
+
+**Ce n'est pas** « respecter la signature ». Python et le typage vérifient déjà ça.
+
+**Ce n'est pas** « ne jamais redéfinir une méthode ». Redéfinir en gardant le contrat est parfaitement légitime.
+
+**C'est** : ce que l'appelant avait le droit d'attendre du parent, il doit continuer à l'obtenir du sous-type.
+
+> Le contrat est souvent **implicite**. C'est pour ça que LSP se viole sans s'en rendre compte, et que l'erreur n'apparaît qu'en production.
+
+---
+
+## Les trois clauses du contrat
+### Ce qu'un sous-type peut et ne peut pas faire
+
+![w:900 center](img/lsp-contrat.svg)
+
+---
+
+## La règle en une phrase
+### Si vous ne retenez qu'une chose
+
+Un sous-type peut **assouplir ce qu'il exige** et **renforcer ce qu'il garantit**. Jamais l'inverse.
+
+| Le sous-type | A le droit de | N'a pas le droit de |
+|---|---|---|
+| Préconditions, ce qu'il exige | en demander **moins** | en demander **plus** |
+| Postconditions, ce qu'il garantit | en garantir **plus** | en garantir **moins** |
+| Exceptions | en lever **moins** | en lever de **nouvelles** |
+
+> Retenez le sens : un sous-type est **plus accommodant**, jamais plus exigeant.
 
 ---
 
 <!-- _class: compare -->
 
-## LSP, l'exemple qui arrive vraiment
-### Le compte sans découvert
+## Exemple 1, le carré et le rectangle
+### Le cas d'école, en trente secondes
+
+#### La hiérarchie qui semble évidente
+
+```python
+class Rectangle:
+    def definir_largeur(self, l):
+        self.l = l
+
+    def definir_hauteur(self, h):
+        self.h = h
+
+    def aire(self):
+        return self.l * self.h
+
+
+class Carre(Rectangle):
+    def definir_largeur(self, l):
+        self.l = self.h = l
+```
+
+#### Le test qui casse
+
+```python
+def test_l_aire_suit_les_dimensions(forme):
+    forme.definir_largeur(5)
+    forme.definir_hauteur(4)
+    assert forme.aire() == 20
+```
+
+Sur `Rectangle` : 20. Sur `Carre` : **16**.
+
+La postcondition « l'aire vaut largeur fois hauteur » n'est plus tenue.
+
+> En mathématiques, un carré **est** un rectangle. En programmation, `Carre` n'est pas un sous-type de `Rectangle`. **L'héritage suit le comportement, pas le vocabulaire.**
+
+---
+
+<!-- _class: compare -->
+
+## Exemple 2, le compte sans découvert
+### Une précondition renforcée
 
 #### La classe de base
 
 ```python
 class Compte:
     def retirer(self, montant):
-        """Retire le montant et
-        renvoie le nouveau solde."""
+        """Retire le montant et renvoie
+        le nouveau solde."""
         self.solde -= montant
         return self.solde
 ```
@@ -648,135 +979,304 @@ class CompteSansDecouvert(Compte):
         return super().retirer(montant)
 ```
 
-Le sous-type **ajoute une précondition**. Tout code écrit pour `Compte` peut désormais exploser.
+Le sous-type **ajoute une précondition** et **lève une exception nouvelle**. Deux clauses violées sur trois.
 
-> Ce n'est pas le code qui est mauvais, c'est la **hiérarchie**. `CompteSansDecouvert` n'est pas un `Compte`, c'est autre chose.
+> Tout code écrit pour `Compte` peut désormais exploser. Ce n'est pas le code du sous-type qui est mauvais, c'est la **hiérarchie**.
 
 ---
 
 <!-- _class: compare -->
 
-## L'exemple canonique, en trente secondes
-### Le carré et le rectangle
+## Exemple 3, l'abonnement annuel
+### Le code que vous recevez cet après-midi
 
-#### La hiérarchie qui semble évidente
-
-```python
-class Rectangle:
-    def definir_largeur(self, l): self.l = l
-    def definir_hauteur(self, h): self.h = h
-    def aire(self): return self.l * self.h
-
-class Carre(Rectangle):
-    def definir_largeur(self, l):
-        self.l = self.h = l
-    def definir_hauteur(self, h):
-        self.l = self.h = h
-```
-
-#### Le test qui casse
+#### Le contrat du parent
 
 ```python
-def test_l_aire_suit_les_dimensions(forme):
-    forme.definir_largeur(5)
-    forme.definir_hauteur(4)
-    assert forme.aire() == 20
+class Abonnement:
+    """Contrat de resilier :
+    - enregistre la date de fin
+    - renvoie la date de fin
+    - leve ValueError si la date
+      precede le debut
+    - ne leve aucune autre exception
+    """
+
+    def resilier(self, a_partir_de):
+        self.fin = a_partir_de
+        return self.fin
 ```
 
-Sur `Rectangle` : 20. Sur `Carre` : **16**.
+#### Le sous-type
 
-> En mathématiques un carré est un rectangle. En programmation, `Carre` n'est pas un sous-type de `Rectangle`, parce qu'il ne tient pas ses promesses. **L'héritage suit le comportement, pas le vocabulaire.**
+```python
+class AbonnementAnnuel(Abonnement):
+    def resilier(self, a_partir_de):
+        raise ResiliationImpossible(...)
+```
+
+Il ne fait **rien** de ce que le contrat promet, et lève une exception que le contrat interdit.
+
+> Le code qui parcourt une liste d'abonnements pour résilier ceux qui arrivent à terme plantera le jour où un abonnement annuel s'y trouve. En production, un vendredi.
 
 ---
 
-## La règle pratique de LSP
-### Trois questions, et vous savez
+## Les signes qui ne trompent pas
+### Quatre symptômes d'une violation de LSP
 
-Un sous-type a le droit d'**assouplir** ce qu'il exige et de **renforcer** ce qu'il garantit. Jamais l'inverse.
+- Une méthode redéfinie qui commence par `raise NotImplementedError` ou `raise ...Impossible`
+- Un `if isinstance(...)` chez l'**appelant**, pour éviter certains sous-types
+- Une méthode redéfinie qui **ne fait rien**, un corps réduit à `pass`
+- Une documentation qui dit « attention, pour cette sous-classe, la méthode se comporte différemment »
 
-| Le sous-type | A le droit de | N'a pas le droit de |
-|---|---|---|
-| Préconditions, ce qu'il exige | en demander **moins** | en demander **plus** |
-| Postconditions, ce qu'il garantit | en garantir **plus** | en garantir **moins** |
-| Exceptions | en lever **moins** | en lever de **nouvelles** |
+> Le premier signe est le plus fréquent, et il est détectable par `grep`.
 
-> Le signe qui ne trompe pas : une méthode redéfinie qui commence par `raise NotImplementedError` ou `if not supporté`.
+```bash
+grep -rn "NotImplementedError" --include="*.py" . | grep -v "ABC\|abstract"
+```
 
 ---
 
 ## Le test de substituabilité
 ### Comment on le prouve, concrètement
 
-On écrit les tests **une fois**, contre le type de base, et on les fait tourner sur chaque sous-type.
+On écrit les tests **une seule fois**, contre le contrat du parent, et on les fait tourner sur **chaque** sous-type.
 
 ```python
-@pytest.fixture(params=[Compte, CompteSansDecouvert])
-def compte(request):
-    return request.param(solde=100)
+@pytest.fixture(params=[Abonnement, AbonnementAnnuel, AbonnementEssai])
+def contrat(request):
+    return request.param(
+        client="X", formule="pro", nombre_de_postes=3, debut=date(2026, 1, 1)
+    )
 
 
-def test_un_retrait_renvoie_le_nouveau_solde(compte):
-    assert compte.retirer(150) == -50
+def test_une_resiliation_renvoie_la_date_de_fin(contrat):
+    assert contrat.resilier(date(2026, 7, 1)) == date(2026, 7, 1)
 ```
 
-- Sur `Compte` : vert
-- Sur `CompteSansDecouvert` : rouge
+- Sur `Abonnement` : vert
+- Sur `AbonnementEssai` : vert
+- Sur `AbonnementAnnuel` : **rouge**
 
-> C'est votre mission 5 de cet après-midi. Une suite de tests partagée est le seul moyen honnête de vérifier LSP.
+> Une suite de tests partagée est le seul moyen honnête de vérifier LSP. C'est votre mission 5 de cet après-midi.
 
 ---
 
-## I comme Interface Segregation
-### L'énoncé
+## Comment corriger
+### Trois issues, de la plus simple à la plus coûteuse
 
-> Aucun client ne doit être forcé de dépendre de méthodes qu'il **n'utilise pas**.
+**Sortir le sous-type de la hiérarchie.** Si `AbonnementAnnuel` ne sait pas résilier, ce n'est pas un `Abonnement` au sens du contrat. C'est un type voisin.
 
-Le symptôme : pour utiliser une seule méthode, vous devez en implémenter douze, dont onze qui lèvent une exception.
+**Remonter la capacité dans le parent.** Ajouter `peut_etre_resilie()` au contrat, que tout le monde implémente honnêtement. L'appelant demande avant d'agir.
 
-Le remède : plusieurs petites interfaces **définies par le besoin du client**, pas par la richesse du fournisseur.
+**Remplacer l'héritage par la composition.** L'abonnement délègue à une **politique de résiliation** qu'on lui donne à la construction.
+
+> La troisième est presque toujours la bonne. Et ce n'est pas un hasard : elle transforme un problème de LSP en un problème de OCP, qu'on sait résoudre.
 
 ---
 
 <!-- _class: compare -->
 
-## ISP en Python
-### Les Protocol, arrivés en 3.8
+## La correction par composition
+### Le même besoin, sans le piège
 
-#### La grosse interface
+#### Avant
 
 ```python
-class Stockage(ABC):
-    @abstractmethod
-    def lire(self): ...
-    @abstractmethod
-    def ecrire(self, x): ...
-    @abstractmethod
-    def supprimer(self, x): ...
-    @abstractmethod
-    def archiver(self): ...
-    @abstractmethod
-    def restaurer(self): ...
+class Abonnement:
+    def resilier(self, a_partir_de): ...
+
+
+class AbonnementAnnuel(Abonnement):
+    def resilier(self, a_partir_de):
+        raise ResiliationImpossible(...)
 ```
 
-Le module de lecture doit tout implémenter.
+Le type porte la règle. On ne peut pas en changer sans changer de type.
 
-#### Le protocole du besoin
+#### Après
 
 ```python
-from typing import Protocol
+class Abonnement:
+    def __init__(self, ..., politique):
+        self.politique = politique
 
-class Lisible(Protocol):
+    def peut_etre_resilie(self, le_jour):
+        return self.politique.autorise(self, le_jour)
+
+    def resilier(self, a_partir_de):
+        if not self.peut_etre_resilie(a_partir_de):
+            return None
+        self.fin = a_partir_de
+        return self.fin
+```
+
+> Une seule classe, plusieurs politiques, et un contrat que **tout le monde** tient. Ajouter une politique devient un fichier neuf.
+
+---
+
+## Mini-activité, 3 minutes
+### Ces trois sous-types violent-ils LSP ?
+
+```python
+class FichierEnLecture:
     def lire(self) -> bytes: ...
-
-class Inscriptible(Protocol):
     def ecrire(self, contenu: bytes) -> None: ...
 
-def afficher(source: Lisible): ...
+class FichierEnLectureSeule(FichierEnLecture):
+    def ecrire(self, contenu): raise PermissionError("lecture seule")
+
+class FichierCompresse(FichierEnLecture):
+    def lire(self): return decompresser(super().lire())
+
+class FichierJournalise(FichierEnLecture):
+    def ecrire(self, contenu):
+        journal.info("ecriture de %d octets", len(contenu))
+        super().ecrire(contenu)
 ```
 
-Aucune déclaration d'héritage, aucun import chez le fournisseur.
+> Lesquels, et sur quelle clause du contrat ?
 
-> Un `Protocol` est vérifié par **structure**, pas par déclaration. C'est le typage canard, avec un contrôle statique en prime.
+---
+
+## La correction
+### Un seul viole, et la réponse tient en une ligne
+
+| Sous-type | Verdict | Pourquoi |
+|---|---|---|
+| `FichierEnLectureSeule` | **viole** | lève une exception nouvelle sur une méthode que le contrat promet |
+| `FichierCompresse` | conforme | même contrat, contenu différent, aucune promesse rompue |
+| `FichierJournalise` | conforme | ajoute un effet de bord, tient toutes les promesses |
+
+La correction pour le premier : `FichierEnLectureSeule` n'est pas un `FichierEnLecture`. Il faut **deux protocoles**, `Lisible` et `Inscriptible`, et ne demander que ce dont on a besoin.
+
+> Et voilà comment un problème de LSP se résout avec le principe suivant.
+
+---
+
+<!-- _class: lead -->
+
+# I
+## Interface Segregation
+### Des interfaces à la taille du besoin
+
+---
+
+## L'énoncé
+### La formulation d'origine
+
+> Aucun client ne doit être forcé de dépendre de méthodes qu'il **n'utilise pas**.
+
+Le symptôme : pour utiliser une seule méthode, vous devez en implémenter douze, dont onze qui lèvent une exception.
+
+Le remède : plusieurs petites interfaces, **définies par le besoin du client**, pas par la richesse du fournisseur.
+
+---
+
+## Ce que ISP ne veut pas dire
+### Le contresens habituel
+
+**Ce n'est pas** « une interface par méthode ». Si trois méthodes sont toujours utilisées ensemble par les mêmes clients, elles vont ensemble.
+
+**Ce n'est pas** un problème d'**interface** au sens du mot-clé. C'est un problème de **client**. La bonne question n'est jamais « cette interface est-elle trop grosse », c'est « **ce client a-t-il besoin de tout ça** ».
+
+> Deux clients différents peuvent légitimement voir deux interfaces différentes du même objet.
+
+---
+
+## Le symptôme
+### Une interface trop large produit des implémentations qui mentent
+
+![w:880 center](img/isp-protocoles.svg)
+
+---
+
+<!-- _class: compare -->
+
+## Exemple 1, la passerelle de communication
+### Le code du TP de cet après-midi
+
+#### Ce que l'interface impose
+
+```python
+class PasserelleDeCommunication(ABC):
+    @abstractmethod
+    def envoyer_courriel(self, a, sujet, corps): ...
+    @abstractmethod
+    def envoyer_sms(self, numero, texte): ...
+    @abstractmethod
+    def envoyer_notification_push(self, ...): ...
+    @abstractmethod
+    def verifier_adresse(self, adresse): ...
+    @abstractmethod
+    def statistiques_d_envoi(self): ...
+    @abstractmethod
+    def purger_la_file(self): ...
+```
+
+#### Ce que ça produit
+
+```python
+class ClientSMTP(PasserelleDeCommunication):
+    def envoyer_courriel(self, a, sujet, corps):
+        ...
+
+    def envoyer_sms(self, numero, texte):
+        raise NotImplementedError(
+            "ce fournisseur ne fait pas de SMS"
+        )
+
+    def envoyer_notification_push(self, ...):
+        raise NotImplementedError(...)
+```
+
+> Deux méthodes sur six qui mentent. Et au passage, une violation de LSP : `ClientSMTP` n'est pas substituable à `PasserelleDeCommunication`.
+
+---
+
+<!-- _class: compare -->
+
+## Exemple 2, le dépôt à tout faire
+### Le cas le plus répandu en entreprise
+
+#### Une interface pour tout le monde
+
+```python
+class DepotClients(Protocol):
+    def par_identifiant(self, id): ...
+    def par_email(self, email): ...
+    def tous(self): ...
+    def enregistrer(self, client): ...
+    def supprimer(self, id): ...
+    def compter(self): ...
+    def exporter_csv(self): ...
+```
+
+Le double de test doit implémenter **sept** méthodes.
+
+#### Ce dont chaque client a besoin
+
+```python
+class LecteurDeClient(Protocol):
+    def par_identifiant(self, id) -> Client: ...
+
+
+def afficher_fiche(lecteur: LecteurDeClient, id):
+    ...
+```
+
+Le double de test implémente **une** méthode :
+
+```python
+class LecteurEnMemoire:
+    def __init__(self, clients):
+        self.clients = clients
+
+    def par_identifiant(self, id):
+        return self.clients[id]
+```
+
+> Le vrai coût d'une interface trop large, ce n'est pas l'élégance. C'est la taille du double que vous écrivez dans chaque test.
 
 ---
 
@@ -785,24 +1285,79 @@ Aucune déclaration d'héritage, aucun import chez le fournisseur.
 
 L'interface appartient au **client**, pas au fournisseur.
 
-- `Lisible` est déclaré à côté de `afficher`, qui en a besoin
-- Pas à côté de `FichierDisque`, qui se trouve la satisfaire
+- `Expediteur` se déclare à côté de `EmetteurDeFactures`, qui en a besoin
+- Pas à côté de `ClientSMTP`, qui se trouve la satisfaire
 
-> Conséquence directe : le métier ne dépend plus jamais de l'infrastructure. Ce qui nous amène au cinquième principe.
+Conséquence directe et considérable : le métier ne dépend plus jamais de l'infrastructure.
+
+> Ce qui nous amène tout droit au cinquième principe.
 
 ---
 
-## D comme Dependency Inversion
-### L'énoncé
+## ISP en Python
+### Les Protocol, arrivés en 3.8
 
-> Les modules de haut niveau ne doivent pas dépendre des modules de bas niveau. **Les deux** doivent dépendre d'abstractions.
+```python
+from typing import Protocol
+
+
+class Expediteur(Protocol):
+    def envoyer(self, destinataire: str, sujet: str, corps: str) -> None: ...
+
+
+def emettre(abonnement, adresse, expediteur: Expediteur) -> Facture:
+    ...
+```
+
+- Aucune déclaration d'héritage côté fournisseur
+- Aucun import du protocole par celui qui l'implémente
+- Vérifié par **structure**, pas par déclaration
+
+> C'est le typage canard, avec un contrôle statique en prime. En Java ou en C#, il faudrait que le fournisseur déclare `implements`, ce qui recrée le couplage qu'on voulait éviter.
+
+---
+
+## Comment détecter une violation de ISP
+### Trois signes
+
+- Une implémentation qui contient `NotImplementedError` ou un corps vide
+- Un double de test qui fait **plus de dix lignes** pour un besoin de deux méthodes
+- Une interface dont les méthodes se répartissent en **groupes** utilisés par des appelants différents
+
+> Le deuxième signe est le plus parlant en salle : montrez le double de test, personne ne défend l'interface.
+
+---
+
+<!-- _class: lead -->
+
+# D
+## Dependency Inversion
+### La politique ne connaît pas le mécanisme
+
+---
+
+## L'énoncé
+### Deux phrases, et la seconde est la plus importante
+
+> Les modules de **haut niveau** ne doivent pas dépendre des modules de **bas niveau**. Les deux doivent dépendre d'**abstractions**.
 
 > Les abstractions ne doivent pas dépendre des détails. Les **détails** doivent dépendre des abstractions.
 
 Traduction : la **politique** ne doit jamais connaître le **mécanisme**.
 
-- La politique : « un article sous son seuil déclenche une commande »
-- Le mécanisme : PostgreSQL, un fichier JSON, un appel HTTP
+- La politique : « une facture part chez le client après émission »
+- Le mécanisme : SMTP, une file de messages, un appel HTTP
+
+---
+
+## Ce que DIP ne veut pas dire
+### Le mot inversion prête à confusion
+
+**Ce n'est pas** « injecter toutes les dépendances ». L'injection est un **moyen**, DIP est l'**objectif**.
+
+**Ce n'est pas** « ajouter une couche ». Une abstraction qui n'a qu'une implémentation et qui n'en aura jamais d'autre est une couche inutile.
+
+Ce qui s'inverse, c'est le **sens de la flèche de dépendance**. Avant, le métier pointait vers la technique. Après, la technique pointe vers le métier.
 
 ---
 
@@ -815,83 +1370,215 @@ Traduction : la **politique** ne doit jamais connaître le **mécanisme**.
 
 <!-- _class: compare -->
 
-## DIP sur le code d'hier
-### La seule fonction non couverte par les tests
+## Exemple 1, l'envoi de la facture
+### Le code du TP de cet après-midi
 
-#### Le métier connaît le disque
+#### Le métier connaît SMTP
 
 ```python
-def exporter_rapport(rapport, chemin):
-    with open(chemin, "w") as f:
-        json.dump(asdict(rapport), f)
+from facturation.passerelles import ClientSMTP
+
+
+class EmetteurDeFactures:
+    def __init__(self):
+        self.passerelle = ClientSMTP()
+
+    def emettre(self, abonnement, adresse, ...):
+        ...
+        self.passerelle.envoyer_courriel(
+            adresse, sujet, corps
+        )
 ```
 
-Pour tester, il faut un **vrai fichier**. Donc on ne teste pas.
+Pour tester, il faut capturer une sortie, ou un vrai serveur.
 
 #### Le métier connaît un protocole
 
 ```python
-class Destination(Protocol):
-    def deposer(self, nom: str,
-                contenu: str) -> None: ...
+class Expediteur(Protocol):
+    def envoyer(self, destinataire: str,
+                sujet: str, corps: str) -> None: ...
 
-def exporter(rapport, destination: Destination):
-    destination.deposer(
-        f"rapport-{rapport.date_du_rapport}.json",
-        json.dumps(asdict(rapport)),
-    )
+
+class EmetteurDeFactures:
+    def __init__(self, expediteur: Expediteur):
+        self.expediteur = expediteur
+
+    def emettre(self, abonnement, adresse, ...):
+        ...
+        self.expediteur.envoyer(
+            adresse, sujet, corps
+        )
 ```
 
-Le test injecte une destination en mémoire.
+Le test injecte un expéditeur en mémoire.
 
-> Ce n'est pas un hasard si la seule fonction non couverte de votre TP1 est celle qui viole DIP. **La violation de DIP est visible dans le rapport de couverture.**
+> L'import disparaît du module métier. C'est ça, l'inversion : **`facture.py` n'importe plus `passerelles.py`**.
 
 ---
 
-## Vous avez déjà fait du DIP hier
-### Sans connaître le nom
+<!-- _class: compare -->
+
+## Exemple 2, l'horloge
+### La dépendance qu'on oublie toujours
+
+#### Intestable
 
 ```python
-def est_majeur(date_naissance, aujourdhui):
-    ...
-
-def tarif_en_cours(entree, maintenant, est_abonne=False):
-    ...
+def emettre(self, abonnement, adresse, ...):
+    emise_le = datetime.now().date()
+    facture = Facture(
+        numero=self.numeroter(emise_le),
+        emise_le=emise_le,
+        ...
+    )
 ```
 
-- L'horloge est un **détail**
-- Le calcul d'âge est une **politique**
-- Vous avez fait entrer le détail par un paramètre
+Impossible d'écrire un test sur le numéro de facture d'une année donnée. Le test du 31 décembre à 23h59 échouera.
 
-> L'exigence E8 du TP1 était un exercice de DIP déguisé. Le principe n'est que la généralisation de ce réflexe.
+#### Testable
+
+```python
+def emettre(self, abonnement, adresse,
+            emise_le: date, ...):
+    facture = Facture(
+        numero=self.numeroter(emise_le),
+        emise_le=emise_le,
+        ...
+    )
+```
+
+```python
+def test_le_numero_porte_l_annee():
+    facture = emetteur.emettre(
+        abonnement(), "x@y.fr",
+        emise_le=date(2026, 3, 5),
+    )
+    assert facture.numero == "FA-2026-0001"
+```
+
+> L'horloge est un **détail**. Le calcul du numéro est une **politique**. Vous avez déjà fait exactement ça hier, avec l'exigence E8 du kata parking.
+
+---
+
+<!-- _class: compare -->
+
+## Exemple 3, le fichier de configuration
+### Le troisième détail qu'on laisse entrer
+
+#### Le métier lit le disque
+
+```python
+def taux_de_remise_maximal():
+    with open("config.json") as fichier:
+        return json.load(fichier)["remise_max"]
+
+
+def appliquer_remise(montant, taux):
+    if taux > taux_de_remise_maximal():
+        raise RemiseTropForte(taux)
+    return montant * (1 - taux)
+```
+
+Tester la règle métier demande un fichier sur le disque.
+
+#### Le métier reçoit la valeur
+
+```python
+def appliquer_remise(montant, taux, taux_maximal):
+    if taux > taux_maximal:
+        raise RemiseTropForte(taux)
+    return montant * (1 - taux)
+```
+
+Le fichier est lu **une fois**, au démarrage, par le code d'assemblage.
+
+> La règle des trois détails : l'**horloge**, le **hasard**, et la **configuration**. Les trois entrent par un paramètre, jamais par un appel.
 
 ---
 
 ## Les trois façons d'injecter
 ### Par ordre de préférence
 
-| Forme | Quand | Exemple |
+| Forme | Quand l'utiliser | Exemple |
 |---|---|---|
-| Par **paramètre** | la dépendance change à chaque appel | `tarif_en_cours(entree, maintenant)` |
-| Par le **constructeur** | la dépendance vaut pour la vie de l'objet | `Generateur(destination)` |
-| Par **valeur par défaut** | il existe un choix évident, surchargeable | `def exporter(r, dest=DisqueLocal())` |
+| Par **paramètre** | la dépendance change à chaque appel | `emettre(..., emise_le=date(...))` |
+| Par le **constructeur** | la dépendance vaut pour la vie de l'objet | `EmetteurDeFactures(expediteur)` |
+| Par **valeur par défaut** | il existe un choix évident, surchargeable | `def emettre(..., horloge=None)` |
 
-> La troisième est pratique et dangereuse : une valeur par défaut mutable partagée, c'est le piège du jour 1. Préférez `None` puis construction dans le corps.
+> La troisième est pratique et dangereuse : une valeur par défaut **mutable** partagée, c'est le piège du jour 1. Préférez `None` puis construction dans le corps.
 
 ---
 
-## SOLID et vos tests
-### Chaque principe débloque un type de test
+## Où se fait l'assemblage
+### La question que tout le monde pose
 
-| Principe | Ce qu'il rend testable |
-|---|---|
-| **SRP** | la règle métier, sans monter la mise en forme |
-| **OCP** | le nouveau cas, sans rejouer l'ancien |
-| **LSP** | une suite de tests partagée par toute la hiérarchie |
-| **ISP** | un double léger, avec deux méthodes au lieu de douze |
-| **DIP** | le métier, sans disque, sans réseau, sans base |
+Si personne ne construit `ClientSMTP`, qui le fait ?
 
-> C'est la vraie raison d'apprendre SOLID. Un code SOLID est un code qu'on peut tester vite, et un code qu'on teste vite est un code qu'on ose modifier.
+Un seul endroit, le plus **extérieur** possible : le point d'entrée du programme.
+
+```python
+# main.py, le seul fichier qui connaît tout le monde
+from facturation.facture import EmetteurDeFactures
+from infrastructure.smtp import ExpediteurSMTP
+
+emetteur = EmetteurDeFactures(expediteur=ExpediteurSMTP("smtp.interne"))
+```
+
+- `facture.py` ne connaît que le protocole
+- `smtp.py` ne connaît que le protocole
+- `main.py` connaît les deux, et c'est son métier
+
+> C'est ce qu'on appelle la racine de composition. Un seul fichier sale, et il est minuscule.
+
+---
+
+## Comment détecter une violation de DIP
+### Le rapport de couverture le dit avant vous
+
+- Une fonction **jamais couverte** par les tests, alors qu'elle contient de la logique
+- Un `import` de `smtplib`, `requests`, `psycopg2`, `boto3` dans un module **métier**
+- Un appel à `datetime.now()`, `random`, `open`, `os.environ` au milieu d'un calcul
+- Un test qui a besoin de `tmp_path`, d'un serveur, ou d'une variable d'environnement
+
+```bash
+grep -rn "datetime.now()\|open(\|requests\." --include="*.py" metier/
+```
+
+> Hier, la seule fonction non couverte de votre TP1 était celle qui écrivait un fichier. Ce n'était pas un hasard.
+
+---
+
+## Le test que DIP débloque
+### Douze lignes de double, et c'est réglé pour toujours
+
+```python
+class ExpediteurEnMemoire:
+    def __init__(self):
+        self.envois = []
+
+    def envoyer(self, destinataire, sujet, corps):
+        self.envois.append((destinataire, sujet, corps))
+
+
+def test_la_facture_part_chez_le_client():
+    expediteur = ExpediteurEnMemoire()
+    EmetteurDeFactures(expediteur).emettre(abonnement(), "compta@dupont.fr", ...)
+    destinataire, sujet, _ = expediteur.envois[0]
+    assert destinataire == "compta@dupont.fr"
+    assert "FA-2026" in sujet
+```
+
+- Aucun serveur, aucun réseau, aucune clé d'API dans les tests
+- Le test s'exécute en **microsecondes** et tourne dans la CI sans configuration
+
+---
+
+<!-- _class: lead -->
+
+# Acte 7
+## Synthèse
+### Et quand ne pas appliquer
 
 ---
 
@@ -908,733 +1595,52 @@ def tarif_en_cours(entree, maintenant, est_abonne=False):
 
 ---
 
-## Mini-activité, 5 minutes
-### En binôme, quel principe est violé dans chaque extrait ?
+## Chaque principe soigne un symptôme
+### Le lien avec l'acte 1
 
-```python
-# A
-def envoyer_facture(commande):
-    total = sum(l.prix * l.qte for l in commande.lignes)
-    corps = f"Total : {total} euros"
-    smtplib.SMTP("smtp.interne").sendmail("no-reply@x.fr", commande.email, corps)
-```
-
-```python
-# B
-class Imprimante(Protocol):
-    def imprimer(self): ...
-    def scanner(self): ...
-    def faxer(self): ...
-
-class ImprimanteDeBureau:
-    def faxer(self): raise NotImplementedError("pas de fax sur ce modèle")
-```
-
-```python
-# C
-def calculer_frais(commande):
-    if commande.pays == "FR": return 4.90
-    if commande.pays == "BE": return 7.50
-    if commande.pays == "DE": return 8.20
-    return 15.00
-```
+![w:880 center](img/solid-questions.svg)
 
 ---
 
-## La correction
-### Et le piège de la question
+## SOLID et vos tests
+### La vraie raison d'apprendre tout ça
 
-| Extrait | Principe violé | Le signe qui le trahit |
-|---|---|---|
-| **A** | SRP et DIP | une fonction calcule, met en forme **et** ouvre une connexion SMTP |
-| **B** | ISP et LSP | une méthode du protocole que l'implémentation refuse de tenir |
-| **C** | OCP | un nouveau pays oblige à rouvrir la fonction |
+| Principe | Ce qu'il rend testable |
+|---|---|
+| **SRP** | la règle métier, sans monter la mise en forme |
+| **OCP** | le nouveau cas, sans rejouer l'ancien |
+| **LSP** | une suite de tests partagée par toute la hiérarchie |
+| **ISP** | un double de test léger, deux méthodes au lieu de douze |
+| **DIP** | le métier, sans disque, sans réseau, sans base |
 
-Le piège : **aucun des trois n'est forcément à corriger**.
-
-- L'extrait C est parfait si votre entreprise ne livre que dans ces trois pays depuis dix ans
-- Il devient un problème le jour où le commercial signe un contrat en Espagne
-
-> Un principe violé n'est pas un bug. C'est une **dette** dont il faut savoir si vous paierez les intérêts.
+> Un code SOLID est un code qu'on teste vite. Un code qu'on teste vite est un code qu'on ose modifier. C'est tout l'enjeu.
 
 ---
 
-## Le piège de SOLID
-### Ce que vous allez être tenté de faire
+## Les cinq ne sont pas indépendants
+### Ils se tiennent par la main
 
-Sortir d'ici et créer une interface pour chaque classe, une factory pour chaque interface, et un module par fonction.
+- Corriger **LSP** par la composition crée un point de variation, donc un problème de **OCP**
+- Résoudre **ISP** en déclarant le protocole chez le client, c'est exactement faire du **DIP**
+- Appliquer **SRP** sépare le métier de la technique, ce qui rend **DIP** évident
+- Appliquer **DIP** sans **ISP** donne des doubles de test énormes
 
-Ce n'est pas SOLID, c'est de la cérémonie.
+> C'est pour ça qu'on les enseigne ensemble. En pratique, vous en appliquez deux ou trois d'un coup sans les nommer.
+
+---
+
+## Le piège
+### Ce que vous allez être tenté de faire cet après-midi
+
+Sortir d'ici et créer une interface pour chaque classe, une fabrique pour chaque interface, et un module par fonction.
+
+Ce n'est pas SOLID, c'est de la **cérémonie**.
 
 - SOLID s'applique là où le code **résiste**, pas partout
 - Un module stable depuis trois ans n'a besoin de rien
 - L'abstraction prématurée coûte plus cher que la duplication
 
-> On revient là-dessus à l'acte 4, et ce sera la partie la plus utile de la journée.
-
----
-
-<!-- _class: lead -->
-
-# Acte 3
-## Les patrons de conception
-### Ce que SOLID donne quand on l'applique
-
----
-
-## Le livre
-### Gamma, Helm, Johnson, Vlissides, 1994
-
-- Quatre auteurs, d'où le surnom **Gang of Four**
-- **23 patrons**, répartis en 3 familles
-- Les exemples sont en C++ et en Smalltalk, le livre a plus de trente ans
-
-Ce qu'ils ont fait n'est pas d'inventer des solutions. C'est d'avoir **donné un nom** à des solutions que tout le monde réinventait.
-
-> Un patron, c'est du vocabulaire partagé. Dire « ici on met une Strategy » remplace dix minutes d'explication au tableau.
-
----
-
-## Les trois familles
-### Et les six qu'on traite aujourd'hui
-
-![w:900 center](img/familles-gof.svg)
-
----
-
-## Pourquoi ces six-là
-### Et pas les dix-sept autres
-
-| Patron retenu | Ce qu'il vous servira à faire |
-|---|---|
-| **Strategy** | remplacer un `if` sur un comportement, le cas le plus fréquent |
-| **Factory Method** | empêcher le métier d'importer des classes concrètes |
-| **Adapter** | isoler une dépendance externe, indispensable en entreprise |
-| **Decorator** | ajouter journal, cache ou réessai sans toucher au métier |
-| **Observer** | réagir à un événement sans coupler l'émetteur aux réactions |
-| **Template Method** | comprendre pourquoi vous allez souvent lui préférer Strategy |
-
-> Les dix-sept autres se lisent en une soirée sur refactoring.guru **une fois** que vous maîtrisez ces six. Dans l'autre ordre, ça ne rentre pas.
-
----
-
-## Ce qu'un patron est, et n'est pas
-### Avant de regarder du code
-
-**Ce n'est pas** une bibliothèque à importer.
-
-**Ce n'est pas** une recette à appliquer par précaution.
-
-**C'est** la description d'un problème récurrent, d'une solution, et de ses conséquences. Le livre consacre autant de place aux conséquences qu'à la solution, et c'est la partie que personne ne lit.
-
-> Un patron appliqué sans le problème correspondant est un patron **mal appliqué**.
-
----
-
-## La carte de la journée
-### Chaque patron répond à un principe
-
-![w:880 center](img/solid-patterns.svg)
-
----
-
-<!-- _class: lead -->
-
-## Patron 1
-### Strategy
-
----
-
-## Strategy
-### Le problème
-
-Vous avez plusieurs façons de faire **la même chose**, et il faut choisir à l'exécution.
-
-- Plusieurs modes de calcul de tarif
-- Plusieurs politiques de remise
-- Plusieurs stratégies de tri
-
-L'intention, telle qu'écrite dans le livre : définir une famille d'algorithmes, les encapsuler, et les rendre **interchangeables**.
-
-> Le symptôme qui appelle Strategy : un `if` ou un `match` sur un **type de comportement**, qui grossit à chaque demande client.
-
----
-
-<!-- _class: compare -->
-
-## Strategy
-### Version GoF contre version Python
-
-#### La version du livre
-
-```python
-class Remise(Protocol):
-    def appliquer(self, montant: float) -> float: ...
-
-class SansRemise:
-    def appliquer(self, montant): return montant
-
-class RemiseAbonne:
-    def appliquer(self, montant): return montant * 0.6
-
-class Tarificateur:
-    def __init__(self, remise: Remise):
-        self.remise = remise
-
-    def total(self, montant):
-        return self.remise.appliquer(montant)
-```
-
-#### La version Python
-
-```python
-def sans_remise(montant):
-    return montant
-
-def remise_abonne(montant):
-    return montant * 0.6
-
-def total(montant, remise=sans_remise):
-    return remise(montant)
-```
-
-En Python, une fonction **est** un objet. La classe à une seule méthode n'apporte rien.
-
-> Même patron, même intention, une ligne au lieu de quinze. Gardez la version objet quand la stratégie a **un état** ou **plusieurs méthodes**.
-
----
-
-<!-- _class: compare -->
-
-## Strategy sur votre kata parking
-### Les trois réductions du TP1 sont déjà trois stratégies
-
-#### Ce que vous avez écrit hier
-
-```python
-def tarif(duree, est_abonne=False,
-          est_electrique=False):
-    ...
-    montant = min(tranches, plafond)
-    if est_abonne:
-        montant *= 0.60
-    return round(montant, 2)
-```
-
-Chaque nouveau statut ajoute un booléen et un `if`.
-
-#### Ce que ça devient
-
-```python
-def plein_tarif(montant):
-    return montant
-
-def tarif_abonne(montant):
-    return montant * 0.60
-
-def tarif_personnel(montant):
-    return 0.0
-
-def tarif(duree, reduction=plein_tarif, ...):
-    return round(reduction(min(tranches, plafond)), 2)
-```
-
-> Le statut « personnel de la mairie » arrive la semaine prochaine. Colonne de gauche : un booléen de plus dans la signature. Colonne de droite : **trois lignes dans un fichier neuf**.
-
----
-
-## Strategy
-### Quand l'utiliser, quand s'abstenir
-
-| Utilisez-le si | Abstenez-vous si |
-|---|---|
-| les variantes se comptent en dizaines | il y en a deux, stables depuis des années |
-| elles arrivent de l'extérieur, plugins, config | elles sont connues à la compilation |
-| chaque variante a des tests propres | le `if` tient en trois lignes lisibles |
-
-> Strategy est le patron le plus utile et le plus sur-utilisé. C'est votre premier réflexe au TP2, et votre premier doute.
-
----
-
-<!-- _class: lead -->
-
-## Patron 2
-### Factory Method
-
----
-
-## Factory Method
-### Le problème
-
-Le code de haut niveau doit créer un objet, mais **ne doit pas savoir lequel**.
-
-```python
-def generer(articles, format):
-    if format == "json":
-        ecrivain = EcrivainJSON()      # le métier connaît la classe concrète
-    elif format == "csv":
-        ecrivain = EcrivainCSV()
-    ...
-```
-
-- Le module métier **importe** toutes les implémentations
-- Ajouter un format oblige à rouvrir le métier
-- Le test doit gérer les vraies classes
-
----
-
-<!-- _class: compare -->
-
-## Factory Method
-### Version GoF contre version Python
-
-#### La version du livre
-
-```python
-class FabriqueEcrivain(ABC):
-    @abstractmethod
-    def creer(self) -> Ecrivain: ...
-
-class FabriqueJSON(FabriqueEcrivain):
-    def creer(self):
-        return EcrivainJSON()
-
-class FabriqueCSV(FabriqueEcrivain):
-    def creer(self):
-        return EcrivainCSV()
-```
-
-#### La version Python
-
-```python
-ECRIVAINS = {}
-
-def enregistrer(nom):
-    def decorateur(classe):
-        ECRIVAINS[nom] = classe
-        return classe
-    return decorateur
-
-def creer_ecrivain(nom):
-    if nom not in ECRIVAINS:
-        raise FormatInconnu(nom)
-    return ECRIVAINS[nom]()
-```
-
-> Le registre est la forme Python de la fabrique. Et comme il se remplit par import, ajouter un format devient un **fichier neuf**, donc du OCP.
-
----
-
-<!-- _class: lead -->
-
-## Patron 3
-### Adapter
-
----
-
-## Adapter
-### Le problème
-
-Vous avez un composant qui fait le travail, mais **pas avec la bonne forme**.
-
-- Une bibliothèque externe dont vous n'aimez pas l'interface
-- Un vieux module qu'on ne peut pas modifier
-- Un service dont l'interface va changer et que vous voulez isoler
-
-L'Adapter traduit une interface en une autre, sans toucher ni au client ni au fournisseur.
-
-> C'est la mise en œuvre la plus directe de DIP : vous définissez l'interface dont **vous** avez besoin, et vous adaptez le monde extérieur à elle.
-
----
-
-<!-- _class: compare -->
-
-## Adapter
-### Le fournisseur ne bouge pas, vous non plus
-
-#### Ce que le fournisseur impose
-
-```python
-class ClientSMSExterne:
-    def send_message(self, to, body,
-                     priority=1, retry=3):
-        ...
-```
-
-Votre métier ne devrait pas connaître `priority` ni `retry`.
-
-#### L'interface dont vous avez besoin
-
-```python
-class Notificateur(Protocol):
-    def prevenir(self, destinataire: str,
-                 texte: str) -> None: ...
-
-class NotificateurSMS:
-    def __init__(self, client):
-        self._client = client
-
-    def prevenir(self, destinataire, texte):
-        self._client.send_message(
-            to=destinataire, body=texte
-        )
-```
-
-> Le jour où vous changez de fournisseur, **un seul fichier** change. Et vos tests métier n'ont jamais vu passer un SMS.
-
----
-
-## Ce que l'Adapter fait à vos tests
-### Le vrai bénéfice, il n'est pas dans le diagramme
-
-```python
-class NotificateurEnMemoire:
-    def __init__(self):
-        self.envoyes = []
-
-    def prevenir(self, destinataire, texte):
-        self.envoyes.append((destinataire, texte))
-
-
-def test_une_rupture_previent_la_logistique():
-    notificateur = NotificateurEnMemoire()
-    signaler_rupture(article_vide(), notificateur)
-    assert notificateur.envoyes == [("logistique@x.fr", "VIS-M6 en rupture")]
-```
-
-- Aucun SMS envoyé, aucun réseau, aucune clé d'API dans les tests
-- Le test s'exécute en **microsecondes**
-- Il tourne dans la CI sans configuration
-
-> Douze lignes de double, et une règle métier devient testable pour toujours.
-
----
-
-<!-- _class: lead -->
-
-## Patron 4
-### Decorator
-
----
-
-## Decorator
-### Le problème
-
-Vous voulez ajouter un comportement **autour** d'un objet existant, et pouvoir les empiler.
-
-- Journaliser les appels
-- Mettre en cache le résultat
-- Mesurer le temps passé
-- Réessayer en cas d'échec
-
-Faire tout ça par héritage donne une explosion combinatoire : `EcrivainJSONAvecCacheEtJournalEtReessai`.
-
-> Le Decorator implémente **la même interface** que ce qu'il enveloppe. C'est ce qui permet de l'empiler indéfiniment.
-
----
-
-<!-- _class: compare -->
-
-## Decorator
-### On enveloppe, on n'hérite pas
-
-#### Le décoré et le décorateur
-
-```python
-class EcrivainJSON:
-    def deposer(self, nom, contenu):
-        ...
-
-class AvecJournal:
-    def __init__(self, suivant):
-        self._suivant = suivant
-
-    def deposer(self, nom, contenu):
-        journal.info("dépôt de %s", nom)
-        self._suivant.deposer(nom, contenu)
-```
-
-#### On empile
-
-```python
-destination = AvecJournal(
-    AvecReessai(
-        EcrivainJSON()
-    )
-)
-
-destination.deposer("rapport.json", contenu)
-```
-
-Chaque couche ignore les autres. On en ajoute une sans toucher aux existantes.
-
-> Attention au faux ami : le `@decorateur` de Python n'est **pas** le patron Decorator. Il en est un cas particulier quand il enveloppe une fonction en gardant sa signature.
-
----
-
-<!-- _class: lead -->
-
-## Patron 5
-### Observer
-
----
-
-## Observer
-### Le problème
-
-Quand un événement se produit, **plusieurs choses** doivent réagir, et l'émetteur ne doit pas savoir lesquelles.
-
-Un article passe en rupture. Il faut :
-
-- prévenir la logistique par mail
-- écrire une ligne dans le journal
-- déclencher une commande fournisseur
-- mettre à jour le tableau de bord
-
-> Sans Observer, la fonction qui détecte la rupture importe les quatre modules. Elle a quatre raisons de changer et elle est intestable.
-
----
-
-<!-- _class: compare -->
-
-## Observer
-### L'émetteur ne connaît personne
-
-#### Le sujet observé
-
-```python
-class DetecteurDeRupture:
-    def __init__(self):
-        self._abonnes = []
-
-    def s_abonner(self, reaction):
-        self._abonnes.append(reaction)
-
-    def verifier(self, article):
-        if article.quantite == 0:
-            for reagir in self._abonnes:
-                reagir(article)
-```
-
-#### Les abonnés
-
-```python
-detecteur = DetecteurDeRupture()
-detecteur.s_abonner(prevenir_logistique)
-detecteur.s_abonner(journaliser)
-detecteur.s_abonner(commander_chez_fournisseur)
-```
-
-Le test n'abonne qu'une liste :
-
-```python
-recus = []
-detecteur.s_abonner(recus.append)
-```
-
-> Ajouter une réaction ne touche pas au détecteur. C'est du SRP pour lui, et du OCP pour le système.
-
----
-
-## Observer
-### Les deux pièges
-
-**L'ordre d'exécution.** Rien ne le garantit. Si une réaction dépend d'une autre, ce n'est pas un Observer qu'il vous faut.
-
-**Les erreurs.** Si un abonné lève une exception, que deviennent les suivants ? Décidez, et écrivez le test.
-
-```python
-def test_un_abonne_en_echec_n_empeche_pas_les_autres():
-    detecteur.s_abonner(lambda a: 1 / 0)
-    detecteur.s_abonner(recus.append)
-    detecteur.verifier(article_en_rupture())
-    assert recus == [article_en_rupture()]
-```
-
-> C'est le patron qui produit le plus de bugs de production silencieux. Testez le chemin d'erreur.
-
----
-
-<!-- _class: lead -->
-
-## Patron 6
-### Template Method
-
----
-
-<!-- _class: compare -->
-
-## Template Method
-### Le squelette dans le parent, les trous dans l'enfant
-
-#### La structure
-
-```python
-class ExportDeRapport(ABC):
-    def exporter(self, rapport):
-        contenu = self.serialiser(rapport)
-        self.ecrire(self.nom(rapport), contenu)
-        journal.info("export terminé")
-
-    @abstractmethod
-    def serialiser(self, rapport): ...
-
-    @abstractmethod
-    def nom(self, rapport): ...
-```
-
-#### L'implémentation
-
-```python
-class ExportJSON(ExportDeRapport):
-    def serialiser(self, rapport):
-        return json.dumps(asdict(rapport))
-
-    def nom(self, rapport):
-        return f"{rapport.date}.json"
-```
-
-> L'enchaînement est figé dans le parent, les étapes sont fournies par l'enfant. C'est l'inversion de contrôle sous sa forme la plus simple.
-
----
-
-## Template Method
-### Pourquoi on lui préfère souvent Strategy
-
-| Template Method | Strategy |
-|---|---|
-| repose sur l'**héritage** | repose sur la **composition** |
-| un seul axe de variation | plusieurs axes combinables |
-| choisi à l'écriture | choisi à l'exécution |
-| l'enfant dépend du parent | les deux dépendent d'un protocole |
-
-Et surtout : Template Method est un terrain **naturel de violations LSP**, puisqu'il invite l'enfant à redéfinir des morceaux du comportement du parent.
-
-> Gardez-le pour un enchaînement vraiment figé et partagé. Sinon, composez.
-
----
-
-<!-- _class: compare -->
-
-## Deux patrons que vous croiserez sans les chercher
-### Facade et Composite
-
-#### Facade, réponse à ISP
-
-```python
-# 4 modules, 12 appels, un ordre à respecter
-inventaire.charger()
-prix.recalculer()
-alertes.rafraichir()
-rapport.generer()
-
-# devient
-class ServiceDeStock:
-    def cloture_mensuelle(self, date):
-        ...
-```
-
-Une porte d'entrée simple sur un sous-système compliqué.
-
-#### Composite, l'arbre et la feuille
-
-```python
-class Entrepot:
-    def __init__(self, contenus):
-        self._contenus = contenus
-
-    def valeur(self):
-        return sum(c.valeur()
-                   for c in self._contenus)
-```
-
-Un entrepôt, une allée, un carton, un article : **la même interface**. Le client ne sait pas s'il parle à une feuille ou à une branche.
-
-> Facade **cache** de la complexité. Composite **efface** la différence entre l'un et le multiple.
-
----
-
-## Singleton
-### Pourquoi il est dans le livre, pourquoi on l'évite
-
-Le problème annoncé : garantir qu'il n'existe **qu'une seule instance**.
-
-Le problème réel qu'il crée :
-
-- C'est une **variable globale** avec un costume
-- Les tests partagent l'état, donc l'ordre des tests compte, donc ils deviennent capricieux
-- Impossible d'injecter un double, donc DIP est violé par construction
-
-> En Python, un module **est** déjà un singleton. Si vous voulez une seule instance, créez-la une fois au démarrage et passez-la en paramètre. C'est tout.
-
----
-
-## Quel problème, quel patron
-### Le tableau à garder
-
-| Ce que vous constatez | Ce que vous regardez |
-|---|---|
-| un `if` sur un type de comportement qui grossit | **Strategy** |
-| le métier importe des classes concrètes | **Factory Method** |
-| une interface externe qui ne vous convient pas | **Adapter** |
-| des comportements à empiler autour d'un objet | **Decorator** |
-| un événement, plusieurs réactions inconnues | **Observer** |
-| un enchaînement figé avec des trous | **Template Method** |
-| douze méthodes dont le client en utilise deux | **Facade** |
-| une arborescence traitée comme une feuille | **Composite** |
-
----
-
-## Mini-activité, 4 minutes
-### Quel patron pour chaque situation ?
-
-- **1.** Le client veut choisir entre envoi par mail, par SMS et par notification push, et en ajoutera d'autres
-- **2.** Vous intégrez une API de transporteur dont les noms de champs sont en allemand
-- **3.** Toutes les requêtes vers la base doivent désormais être journalisées et mises en cache
-- **4.** Quand une commande est validée, quatre services différents doivent réagir
-- **5.** Le module de facturation importe `PostgresClient` directement
-
-> Une minute de réflexion, puis on compare. Plusieurs réponses sont défendables, c'est la justification qui compte.
-
----
-
-## La correction
-### Et pourquoi plusieurs réponses tiennent
-
-| # | Réponse attendue | Réponse aussi valable |
-|---|---|---|
-| 1 | **Strategy**, une fonction par canal | **Factory** si le choix vient d'une configuration |
-| 2 | **Adapter**, votre vocabulaire d'un côté, le leur de l'autre | rien, si l'API ne sert qu'à un endroit |
-| 3 | **Decorator**, deux couches empilables | **Proxy**, si c'est le même objet qu'on remplace |
-| 4 | **Observer**, les quatre s'abonnent | une simple liste d'appels, s'il n'y en aura jamais cinq |
-| 5 | **DIP**, un protocole côté facturation | **Adapter** si le client externe ne convient pas |
-
-> La deuxième colonne compte autant que la première. Un patron qu'on choisit sans savoir ce qu'on écarte n'est pas un choix.
-
----
-
-## Ce que Python change vraiment
-### À savoir avant d'appliquer un livre de 1994
-
-| Patron GoF | En Python |
-|---|---|
-| Strategy | une fonction passée en paramètre |
-| Factory Method | un dictionnaire de constructeurs |
-| Singleton | un module, ou une instance créée au démarrage |
-| Iterator | dans le langage, `__iter__` et `yield` |
-| Command | une fonction, ou `functools.partial` |
-| Decorator | souvent une classe enveloppante, parfois `@` |
-| Template Method | souvent remplacé par Strategy |
-
-> Le livre a été écrit pour des langages sans fonctions de première classe. La moitié de ses patrons compensent une absence que Python n'a pas.
-
----
-
-<!-- _class: lead -->
-
-# Acte 4
-## Quand un patron
-### est une erreur
+> Le barème du TP pénalise explicitement une interface introduite sans qu'aucune deuxième implémentation n'existe ni ne soit prévue.
 
 ---
 
@@ -1644,141 +1650,37 @@ Le problème réel qu'il crée :
 - **Lecture** : pour suivre un appel, il faut ouvrir trois fichiers au lieu d'un
 - **Débogage** : la pile d'appels double, et le nom de la classe ne dit plus ce qu'elle fait
 - **Accueil** : un nouvel arrivant met des jours à comprendre une usine de quinze lignes utiles
-- **Exécution** : chaque couche est un appel de méthode, un objet de plus, de la mémoire
+- **Exécution** : chaque couche est un appel de plus, un objet de plus, de la mémoire
 
-> Aucun de ces coûts n'apparaît dans une revue de code. Tous apparaissent six mois plus tard.
-
----
-
-## Le moment où un patron devient rentable
-### La courbe qu'il faut avoir en tête
-
-![w:840 center](img/cout-indirection.svg)
-
----
-
-## La règle de trois
-### La seule heuristique qui tient
-
-**Première occurrence** : vous écrivez le code.
-
-**Deuxième occurrence** : vous dupliquez, et vous notez que c'est la deuxième.
-
-**Troisième occurrence** : maintenant vous abstrayez, parce que vous voyez enfin ce qui varie **et** ce qui ne varie pas.
-
-> Abstraire à la première occurrence, c'est deviner l'axe de variation. Vous vous tromperez, et une mauvaise abstraction coûte plus cher que trois duplications.
-
----
-
-<!-- _class: compare -->
-
-## Deux variantes ne justifient pas un patron
-### Le même besoin, deux écritures
-
-#### Avec Strategy
-
-```python
-class Remise(Protocol):
-    def appliquer(self, m): ...
-
-class Aucune:
-    def appliquer(self, m): return m
-
-class Abonne:
-    def appliquer(self, m): return m * 0.6
-
-def total(m, remise: Remise):
-    return remise.appliquer(m)
-```
-
-4 fichiers, 3 classes, 2 tests de plus.
-
-#### Sans
-
-```python
-def total(montant, est_abonne=False):
-    if est_abonne:
-        return montant * 0.6
-    return montant
-```
-
-1 fonction, 2 tests, lisible en 3 secondes.
-
-> À deux variantes stables, la colonne de droite gagne. Le jour où une troisième arrive, vous faites l'extraction, **avec les tests qui existent déjà**.
-
----
-
-## La tension YAGNI contre OCP
-### Elle est réelle, et on ne peut pas la supprimer
-
-**YAGNI** dit : n'écris pas ce dont tu n'as pas besoin aujourd'hui.
-
-**OCP** dit : prépare l'extension pour ne pas rouvrir demain.
-
-La résolution n'est pas un compromis mou, c'est une règle de priorité :
-
-- Par défaut, **YAGNI gagne**
-- OCP s'applique quand vous avez une **preuve** de variation : trois occurrences, ou une demande client déjà écrite
-
-> Refactoriser vers un patron quand le besoin arrive est **peu coûteux** si vous avez des tests. C'est tout l'intérêt du jour 1.
-
----
-
-## Les signes de la pattern-itis
-### Relisez votre propre code du TP
-
-- Une interface qui n'a **qu'une seule** implémentation, et aucune perspective d'une deuxième
-- Une fabrique qui renvoie toujours le même type
-- Un nom de classe qui contient le nom du patron plutôt que le nom du métier
-- Plus de fichiers de conception que de fichiers de règles métier
-- Vous ne savez pas expliquer à voix haute **quel problème** ce patron résout ici
-
-> Ce dernier point est le critère du TP2 : vous devrez écrire, pour chaque patron introduit, pourquoi vous auriez pu ne pas le faire.
-
----
-
-## Le lien avec l'éco-conception
-### Une amorce pour le jour 4
-
-Chaque couche d'indirection a un coût mesurable à l'exécution : des appels, des objets, de la mémoire, des cycles.
-
-Sur un service appelé un million de fois par jour, une chaîne de cinq décorateurs inutiles se voit sur la facture d'électricité.
-
-- Le code le plus sobre n'est **pas** le code le plus abstrait
-- Ce n'est pas non plus le code illisible que personne n'ose optimiser
-- On mesurera ça au jour 4, avec des outils
-
-> Bien concevoir, c'est mettre l'abstraction là où le changement arrive, et nulle part ailleurs.
+> Aucun de ces coûts n'apparaît en revue de code. Tous apparaissent six mois plus tard.
 
 ---
 
 ## Le test du nouvel arrivant
 ### La seule évaluation honnête de votre conception
 
-Prenez la personne la plus récente de l'équipe. Donnez-lui un ticket réel, petit.
-
-Chronométrez le temps qu'elle met à **trouver où modifier**.
+Prenez la personne la plus récente de l'équipe. Donnez-lui un ticket réel, petit. Chronométrez le temps qu'elle met à **trouver où modifier**.
 
 | Ce que vous observez | Ce que ça dit |
 |---|---|
 | moins de 5 minutes | la conception porte |
 | elle ouvre plus de 5 fichiers pour comprendre | trop d'indirection |
 | elle vous demande où est la règle | les noms ne correspondent pas au métier |
-| elle modifie le mauvais endroit et les tests passent | il manque des tests, pas des patrons |
+| elle modifie le mauvais endroit et les tests passent | il manque des tests, pas des principes |
 
 > Aucune métrique ne remplace cette observation. Faites-la une fois par trimestre.
 
 ---
 
-## La question à se poser avant chaque patron
+## Les quatre questions avant d'abstraire
 ### Quatre secondes de réflexion, des mois d'économie
 
 1. Quel **changement précis** est-ce que j'anticipe ?
-2. Est-ce qu'il est déjà arrivé **trois fois**, ou est-ce que je le devine ?
+2. Est-il déjà arrivé **trois fois**, ou est-ce que je le devine ?
 3. Combien de fichiers un lecteur devra-t-il ouvrir **après** mon changement ?
 4. Si je me trompe, combien coûte le retour en arrière ?
 
-> Si vous ne pouvez pas répondre à la première question par une phrase métier, n'introduisez pas le patron.
+> Si vous ne savez pas répondre à la première par une phrase **métier**, n'abstrayez pas.
 
 ---
 
@@ -1788,11 +1690,11 @@ Chronométrez le temps qu'elle met à **trouver où modifier**.
 - La conception, c'est décider **où passent les frontières**
 - **Forte cohésion, faible couplage**, tout le reste en découle
 - SOLID n'est pas une checklist, ce sont **cinq questions** posées quand le code résiste
-- Un patron est du **vocabulaire partagé**, pas une preuve de compétence
-- La **règle de trois** tranche entre YAGNI et OCP
-- Un code SOLID est surtout un code **facile à tester**, et donc facile à changer
+- Un sous-type est **plus accommodant**, jamais plus exigeant
+- La **règle de trois** tranche entre deviner et anticiper
+- Un code SOLID est surtout un code **facile à tester**, donc facile à changer
 
-> Et le corollaire de tout ça : sans les tests du jour 1, rien de ce qu'on a vu aujourd'hui n'est applicable sans risque.
+> Corollaire : sans les tests du jour 1, rien de ce qu'on a vu aujourd'hui n'est applicable sans risque.
 
 ---
 
@@ -1800,23 +1702,24 @@ Chronométrez le temps qu'elle met à **trouver où modifier**.
 
 # TP2
 ## 5 heures
-### Ajouter sans rien casser
+### Cinq violations dans un code en service
 
 ---
 
 ## L'énoncé en une slide
-### Six missions, votre dépôt du TP1
+### Six missions sur une application de facturation
 
 | Mission | Durée | Ce que vous faites |
 |---|---|---|
-| 0 | 20 min | repartir de votre TP1, ou de la solution de référence |
-| 1 | 40 min | audit de rigidité, sans métriques cette fois |
-| 2 | 70 min | SRP et DIP, rendre testable ce qui touche le disque |
-| 3 | 80 min | **trois règles nouvelles sans modifier une ligne** |
-| 4 | 50 min | deux patrons, justifiés **et** contre-argumentés |
-| 5 | 30 min | prouver une violation LSP par un test, puis la corriger |
+| 0 | 20 min | prendre en main le code, le faire tourner |
+| 1 | 40 min | localiser les **cinq** violations, une par principe |
+| 2 | 50 min | **SRP**, séparer les trois acteurs |
+| 3 | 60 min | **DIP** et **ISP**, sortir le réseau et l'horloge du métier |
+| 4 | 70 min | **OCP**, trois règles ajoutées sans modifier une ligne |
+| 5 | 40 min | **LSP**, prouver la violation puis corriger par composition |
+| 6 | 20 min | rapport et bilan chiffré |
 
-> Tout est dans `tp2/README.md`. La solution du TP1 est dans `tp1/solution/`.
+> Le code fonctionne, il est testé, il est propre. Personne ne vous demande de corriger un bug.
 
 ---
 
@@ -1829,38 +1732,19 @@ Hier on rejouait vos commits `red:`. Aujourd'hui on lit vos diffs.
 ./outils/verifier-ocp.sh /chemin/vers/votre/depot
 ```
 
-Le script vérifie que, entre votre commit de départ et votre rendu, les fichiers métier existants n'ont **aucune ligne supprimée ni modifiée**, et que chaque règle ajoutée est couverte par un test.
+Le script compare l'étiquette `ouverture-terminee` et votre dernier commit. Il refuse toute ligne supprimée dans un fichier métier existant, refuse toute modification d'un test existant, et vérifie que chaque règle ajoutée est couverte par un test neuf.
 
-> Un code qui marche en ayant édité l'existant vaut moins qu'un code équivalent obtenu en ajoutant.
-
----
-
-## Le barème du TP2
-### Ce qui rapporte des points
-
-| Ce qui est évalué | Points |
-|---|---|
-| Hygiène du dépôt et convention de commits | 1 |
-| Mission 1 : audit de rigidité, chiffré en fichiers et en tests | 2 |
-| Mission 2 : SRP et DIP appliqués, tests verts en permanence | 4 |
-| Mission 3 : trois règles ajoutées, **zéro ligne existante modifiée** | 6 |
-| Mission 3 : chaque règle couverte par ses propres tests | 2 |
-| Mission 4 : deux patrons, justifiés **et** contre-argumentés | 3 |
-| Mission 5 : violation LSP prouvée par un test, puis corrigée | 2 |
-| **Total** | **20** |
-
-> La mission 3 pèse 8 points sur 20. C'est la compétence de la journée.
+> Un code qui marche en ayant édité l'existant vaut **moins** qu'un code équivalent obtenu en ajoutant.
 
 ---
 
 ## Les ressources du jour
-### Cinq références
+### Quatre références
 
-- Gamma, Helm, Johnson, Vlissides, *Design Patterns*, 1994
 - Robert C. Martin, *Clean Architecture*, 2017, pour SOLID en contexte
 - Barbara Liskov, *Data Abstraction and Hierarchy*, 1987
 - Sandi Metz, *Practical Object-Oriented Design*, pour la composition
-- refactoring.guru, pour les 23 patrons avec du code Python
+- La documentation de `typing.Protocol`, PEP 544
 
 ---
 

@@ -1,0 +1,39 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 960 380" font-family="Helvetica,Arial,sans-serif">
+  <text x="130" y="24" font-size="18" font-weight="700" fill="#8a94a0" text-anchor="middle">Le principe</text>
+  <text x="440" y="24" font-size="18" font-weight="700" fill="#8a94a0" text-anchor="middle">La question qu'il pose</text>
+  <text x="790" y="24" font-size="18" font-weight="700" fill="#8a94a0" text-anchor="middle">Le symptôme qu'il soigne</text>
+
+  <g font-size="22" font-weight="700">
+    <rect x="20" y="40" width="220" height="56" rx="8" fill="#f2f6fa" stroke="#3d7ea6" stroke-width="2"/>
+    <text x="130" y="76" fill="#3d7ea6" text-anchor="middle">S</text>
+    <rect x="20" y="106" width="220" height="56" rx="8" fill="#f2f6fa" stroke="#3d7ea6" stroke-width="2"/>
+    <text x="130" y="142" fill="#3d7ea6" text-anchor="middle">O</text>
+    <rect x="20" y="172" width="220" height="56" rx="8" fill="#f2f6fa" stroke="#3d7ea6" stroke-width="2"/>
+    <text x="130" y="208" fill="#3d7ea6" text-anchor="middle">L</text>
+    <rect x="20" y="238" width="220" height="56" rx="8" fill="#f2f6fa" stroke="#3d7ea6" stroke-width="2"/>
+    <text x="130" y="274" fill="#3d7ea6" text-anchor="middle">I</text>
+    <rect x="20" y="304" width="220" height="56" rx="8" fill="#f2f6fa" stroke="#3d7ea6" stroke-width="2"/>
+    <text x="130" y="340" fill="#3d7ea6" text-anchor="middle">D</text>
+  </g>
+
+  <g font-size="16" fill="#1f2933">
+    <text x="262" y="74">qui peut me demander de modifier ça ?</text>
+    <text x="262" y="140">puis-je ajouter sans rouvrir ?</text>
+    <text x="262" y="206">ce sous-type tient-il ses promesses ?</text>
+    <text x="262" y="272">mon client a-t-il besoin de tout ça ?</text>
+    <text x="262" y="338">la politique connaît-elle le mécanisme ?</text>
+  </g>
+
+  <g font-size="15" font-weight="700">
+    <rect x="640" y="40" width="300" height="56" rx="8" fill="#f3f7f5" stroke="#3aa76d" stroke-width="2"/>
+    <text x="790" y="74" fill="#3aa76d" text-anchor="middle">la fragilité</text>
+    <rect x="640" y="106" width="300" height="56" rx="8" fill="#f3f7f5" stroke="#3aa76d" stroke-width="2"/>
+    <text x="790" y="140" fill="#3aa76d" text-anchor="middle">la rigidité</text>
+    <rect x="640" y="172" width="300" height="56" rx="8" fill="#f3f7f5" stroke="#3aa76d" stroke-width="2"/>
+    <text x="790" y="206" fill="#3aa76d" text-anchor="middle">les surprises à l'exécution</text>
+    <rect x="640" y="238" width="300" height="56" rx="8" fill="#f3f7f5" stroke="#3aa76d" stroke-width="2"/>
+    <text x="790" y="272" fill="#3aa76d" text-anchor="middle">le couplage inutile</text>
+    <rect x="640" y="304" width="300" height="56" rx="8" fill="#f3f7f5" stroke="#3aa76d" stroke-width="2"/>
+    <text x="790" y="338" fill="#3aa76d" text-anchor="middle">l'immobilité, et l'intestable</text>
+  </g>
+</svg>

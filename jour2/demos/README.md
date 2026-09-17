@@ -10,21 +10,28 @@ pip install pytest pytest-cov ruff pylint radon xenon vulture mypy pre-commit
 
 ## Démo 1, la demande du lundi matin
 
-Pas de dossier dédié : elle se fait **en direct sur `tp1/solution/`**.
+Pas de dossier dédié : elle se fait **en direct sur `tp2/depart/`**, le code que les
+étudiants recevront l'après-midi.
 
 ```bash
-cd tp1/solution
-pytest -q                    # 76 tests verts, on part de là
+cd tp2/depart
+pytest -q                    # 25 tests verts, on part de là
 ```
 
-Ouvrir `inventaire/inventaire.py` et `inventaire/rapport.py`, et montrer au tableau,
-sans coder, ce qu'il faudrait toucher pour les trois demandes D1, D2 et D3 du TP2.
+Ouvrir `facturation/tarifs.py` et `facturation/facture.py`, et montrer au tableau, sans
+coder, ce qu'il faudrait toucher pour les trois demandes de la slide : une formule de
+plus, un code promo de plus, un canal d'envoi de plus.
 
 Compter à voix haute : fichiers rouverts, fonctions modifiées, tests à rejouer.
 
-Le moment qui porte : rappeler que ce code a obtenu **99 % de couverture, rang A partout
-et zéro problème ruff** la veille. Tous les critères du jour 1 sont satisfaits, et le
+Le moment qui porte : rappeler que ce code a **complexité maximale au rang A, zéro
+problème ruff et 25 tests verts**. Tous les critères du jour 1 sont satisfaits, et le
 code résiste quand même.
+
+Le détail qui fait mouche sur la demande SMS : `ClientSMTP.envoyer_sms` existe déjà, et
+lève `NotImplementedError`. L'interface promettait quelque chose que l'implémentation ne
+tient pas. C'est la violation de ISP, et elle est visible avant même d'avoir parlé du
+principe.
 
 ## Démo 2, l'ouverture d'un point de variation
 
@@ -73,12 +80,15 @@ d'intégration au jour 4.
 Montrer enfin `DestinationEnMemoire` : douze lignes de double, et une règle métier
 devient testable pour toujours.
 
-## Démo 4, deux variantes ne justifient pas un patron
+## Démo 4, la TVA par pays
 
-Pas de dossier : elle se fait à l'oral sur la slide de l'acte 4.
+Pas de dossier : elle se fait à l'oral sur la slide de l'acte 3, celle qui demande s'il
+faut ouvrir `taux_de_tva`.
 
 Écrire les deux versions au tableau, compter les fichiers, compter les lignes, et
-demander à la salle laquelle elle préfère maintenir. Puis annoncer l'arrivée d'une
-troisième variante et refaire voter.
+demander à la salle laquelle elle préfère maintenir. Puis annoncer que le commercial
+vient de signer en Espagne, et refaire voter.
 
 C'est le moment le plus utile de la journée pour éviter le code sur-architecturé du TP.
+Le barème pénalise explicitement une abstraction sans deuxième implémentation, autant
+que la salle sache pourquoi.

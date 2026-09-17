@@ -2137,10 +2137,10 @@ Il passe une fois sur deux. Il détruit la confiance de **toute l'équipe**. Ré
 
 | Jour | Contenu |
 |---|---|
-| **2** | Les principes SOLID et les familles de patrons du GoF |
+| **2** | Les cinq principes SOLID, un par un, sur du code en service |
 | **3** | Code legacy, tests de caractérisation, coutures, odeurs |
 | **4** | Stratégie de tests complète, CI/CD, débogage structuré, éco-conception |
 
-> On applique le jour 2 **sur le code que vous aurez produit aujourd'hui**.
+> Le jour 2 part d'une application de facturation en service depuis trois ans, propre sur tous les critères d'aujourd'hui, et pourtant impossible à faire évoluer.
 
 Bon TP.

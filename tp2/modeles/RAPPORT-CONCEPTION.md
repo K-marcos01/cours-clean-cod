@@ -7,26 +7,30 @@ Empreinte du commit `ouverture-terminee` :
 
 ---
 
-## 1. Le coût des trois demandes, avant ouverture
+## 1. Les cinq violations
 
-Rempli en mission 1, sans écrire une ligne de code.
+Une ligne par principe. Le symptôme doit être un fait vérifiable, la conséquence doit
+décrire ce qui arrive à quelqu'un.
 
-| Demande | Fichiers à rouvrir | Fonctions à modifier | Tests existants à rejouer | Principe en cause |
-|---|---|---|---|---|
-| D1 niveau prealerte | | | | |
-| D2 palier à 500 | | | | |
-| D3 export CSV | | | | |
+| Principe | Fichier et ligne | Le symptôme observable | La conséquence concrète |
+|---|---|---|---|
+| S | | | |
+| O | | | |
+| L | | | |
+| I | | | |
+| D | | | |
 
 ---
 
-## 2. La carte des acteurs
+## 2. Le coût des trois demandes, avant
 
-Un acteur est une personne ou un service qui peut demander un changement.
-Un fichier qui apparaît en face de deux acteurs viole SRP. Marque-le.
+Rempli en mission 1, sans écrire une ligne de code.
 
-| Acteur | Ce qu'il peut demander | Fichiers concernés | Conflit ? |
+| Demande | Fichiers à rouvrir | Fonctions à modifier | Tests existants à rejouer |
 |---|---|---|---|
-| | | | |
+| D1 formule decouverte | | | |
+| D2 code promo RENTREE | | | |
+| D3 palier a 200 postes | | | |
 
 ---
 
@@ -48,7 +52,7 @@ Les dépendances qui vont du métier vers un détail technique :
 
 ## 4. Les points de variation ouverts
 
-Rempli en mission 3, premier temps.
+Rempli en mission 4, premier temps.
 
 | Point de variation | Technique choisie | Pourquoi celle-là et pas une plus lourde |
 |---|---|---|
@@ -62,15 +66,15 @@ Preuve que le comportement n'a pas changé pendant l'ouverture :
 
 ---
 
-## 5. Le coût des trois demandes, après ouverture
+## 5. Le coût des trois demandes, après
 
-Mêmes colonnes qu'en partie 1. C'est le delta qui est noté.
+Mêmes demandes, mêmes colonnes. C'est le delta qui est noté.
 
 | Demande | Fichiers rouverts | Fichiers créés | Lignes supprimées dans l'existant | Tests neufs |
 |---|---|---|---|---|
-| D1 niveau prealerte | | | | |
-| D2 palier à 500 | | | | |
-| D3 export CSV | | | | |
+| D1 formule decouverte | | | | |
+| D2 code promo RENTREE | | | | |
+| D3 palier a 200 postes | | | | |
 
 Sortie de `./outils/verifier-ocp.sh` :
 
@@ -80,44 +84,44 @@ Sortie de `./outils/verifier-ocp.sh` :
 
 ---
 
-## 6. Les deux patrons, et leur procès
-
-### Patron 1 :
-
-**Le problème.** Trois phrases maximum. Un symptôme concret, avec un numéro de ligne.
-
-**Le choix.** Pourquoi celui-là. Nomme le patron écarté et dis pourquoi.
-
-**Le coût.** Combien de fichiers un lecteur doit ouvrir en plus pour suivre un appel.
-
-**Le procès.** Pourquoi tu aurais pu ne pas le faire. Ce paragraphe vaut autant que
-les trois autres réunis.
-
-### Patron 2 :
-
-**Le problème.**
-
-**Le choix.**
-
-**Le coût.**
-
-**Le procès.**
-
-### Le code supprimé
-
-Lequel des deux patrons a permis de supprimer du code, et combien de lignes :
-
----
-
-## 7. La hiérarchie qui ment
+## 6. La hiérarchie qui ment
 
 | Sous-type | Contrat respecté ? | Clause brisée | Correction appliquée |
 |---|---|---|---|
 | | | | |
 
-La clause brisée est l'une des trois : précondition renforcée, postcondition
-affaiblie, exception nouvelle.
+La clause brisée est l'une des trois : précondition renforcée, postcondition affaiblie,
+exception nouvelle.
 
-Empreinte du commit `test:` qui prouve la violation :
+Comment la règle métier a survécu à la correction :
 
-Empreinte du commit qui la corrige :
+---
+
+## 7. Principe par principe, ce que ça m'a coûté
+
+Trois phrases maximum par principe, dont une sur le coût de lecture.
+
+**S.**
+
+**O.**
+
+**L.**
+
+**I.**
+
+**D.**
+
+---
+
+## 8. Le procès
+
+Une abstraction que j'ai introduite et dont je ne suis pas sûr.
+
+**Ce que j'ai fait.**
+
+**Pourquoi j'aurais pu ne pas le faire.**
+
+**Ce que ça coûte à quelqu'un qui lit le code pour la première fois.**
+
+Ce paragraphe vaut autant de points que la section 7 entière. S'il ne s'écrit pas
+honnêtement, c'est un résultat : retirez l'abstraction.

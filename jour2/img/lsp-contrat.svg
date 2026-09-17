@@ -1,0 +1,28 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 960 330" font-family="Helvetica,Arial,sans-serif">
+  <text x="200" y="28" font-size="20" font-weight="700" fill="#1f2933" text-anchor="middle">Un sous-type a le droit de</text>
+  <text x="730" y="28" font-size="20" font-weight="700" fill="#1f2933" text-anchor="middle">Il n'a pas le droit de</text>
+
+  <rect x="20" y="48" width="440" height="82" rx="8" fill="#f3f7f5" stroke="#3aa76d" stroke-width="3"/>
+  <text x="40" y="78" font-size="18" font-weight="700" fill="#3aa76d">Préconditions</text>
+  <text x="40" y="106" font-size="17" fill="#3aa76d">en demander MOINS, accepter plus de cas</text>
+
+  <rect x="500" y="48" width="440" height="82" rx="8" fill="#fdf3f3" stroke="#e05252" stroke-width="3"/>
+  <text x="520" y="78" font-size="18" font-weight="700" fill="#e05252">Préconditions</text>
+  <text x="520" y="106" font-size="17" fill="#e05252">en demander PLUS, refuser des cas admis</text>
+
+  <rect x="20" y="146" width="440" height="82" rx="8" fill="#f3f7f5" stroke="#3aa76d" stroke-width="3"/>
+  <text x="40" y="176" font-size="18" font-weight="700" fill="#3aa76d">Postconditions</text>
+  <text x="40" y="204" font-size="17" fill="#3aa76d">en garantir PLUS, promettre davantage</text>
+
+  <rect x="500" y="146" width="440" height="82" rx="8" fill="#fdf3f3" stroke="#e05252" stroke-width="3"/>
+  <text x="520" y="176" font-size="18" font-weight="700" fill="#e05252">Postconditions</text>
+  <text x="520" y="204" font-size="17" fill="#e05252">en garantir MOINS, tenir moins de promesses</text>
+
+  <rect x="20" y="244" width="440" height="72" rx="8" fill="#f3f7f5" stroke="#3aa76d" stroke-width="3"/>
+  <text x="40" y="274" font-size="18" font-weight="700" fill="#3aa76d">Exceptions</text>
+  <text x="40" y="300" font-size="17" fill="#3aa76d">en lever MOINS</text>
+
+  <rect x="500" y="244" width="440" height="72" rx="8" fill="#fdf3f3" stroke="#e05252" stroke-width="3"/>
+  <text x="520" y="274" font-size="18" font-weight="700" fill="#e05252">Exceptions</text>
+  <text x="520" y="300" font-size="17" fill="#e05252">en lever de NOUVELLES</text>
+</svg>

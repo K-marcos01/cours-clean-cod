@@ -1,0 +1,31 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 960 340" font-family="Helvetica,Arial,sans-serif">
+  <defs>
+    <marker id="fa1" markerWidth="12" markerHeight="12" refX="10" refY="4" orient="auto">
+      <path d="M0,0 L10,4 L0,8 z" fill="#e05252"/>
+    </marker>
+  </defs>
+
+  <rect x="330" y="120" width="300" height="100" rx="10" fill="#fdf3f3" stroke="#e05252" stroke-width="4"/>
+  <text x="480" y="162" font-size="22" font-weight="700" fill="#e05252" text-anchor="middle">EmetteurDeFactures</text>
+  <text x="480" y="192" font-size="16" fill="#e05252" text-anchor="middle">un seul fichier</text>
+
+  <rect x="20" y="20" width="250" height="78" rx="8" fill="#f2f6fa" stroke="#3d7ea6" stroke-width="3"/>
+  <text x="145" y="50" font-size="19" font-weight="700" fill="#3d7ea6" text-anchor="middle">Comptabilité</text>
+  <text x="145" y="76" font-size="15" fill="#3d7ea6" text-anchor="middle">« changez le taux de TVA »</text>
+  <line x1="200" y1="100" x2="345" y2="128" stroke="#e05252" stroke-width="3" marker-end="url(#fa1)"/>
+
+  <rect x="690" y="20" width="250" height="78" rx="8" fill="#f2f6fa" stroke="#3d7ea6" stroke-width="3"/>
+  <text x="815" y="50" font-size="19" font-weight="700" fill="#3d7ea6" text-anchor="middle">Direction</text>
+  <text x="815" y="76" font-size="15" fill="#3d7ea6" text-anchor="middle">« ajoutez notre logo »</text>
+  <line x1="760" y1="100" x2="615" y2="128" stroke="#e05252" stroke-width="3" marker-end="url(#fa1)"/>
+
+  <rect x="355" y="262" width="250" height="78" rx="8" fill="#f2f6fa" stroke="#3d7ea6" stroke-width="3"/>
+  <text x="480" y="292" font-size="19" font-weight="700" fill="#3d7ea6" text-anchor="middle">Informatique</text>
+  <text x="480" y="318" font-size="15" fill="#3d7ea6" text-anchor="middle">« on change de serveur mail »</text>
+  <line x1="480" y1="256" x2="480" y2="228" stroke="#e05252" stroke-width="3" marker-end="url(#fa1)"/>
+
+  <text x="145" y="200" font-size="17" font-weight="700" fill="#1f2933" text-anchor="middle">Trois acteurs</text>
+  <text x="145" y="224" font-size="17" font-weight="700" fill="#1f2933" text-anchor="middle">trois rythmes</text>
+  <text x="815" y="200" font-size="17" font-weight="700" fill="#1f2933" text-anchor="middle">Un seul fichier</text>
+  <text x="815" y="224" font-size="17" font-weight="700" fill="#1f2933" text-anchor="middle">à rouvrir</text>
+</svg>

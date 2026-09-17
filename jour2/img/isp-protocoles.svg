@@ -1,0 +1,43 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 960 360" font-family="Helvetica,Arial,sans-serif">
+  <defs>
+    <marker id="fi" markerWidth="11" markerHeight="11" refX="9" refY="4" orient="auto">
+      <path d="M0,0 L9,4 L0,8 z" fill="#5a6672"/>
+    </marker>
+  </defs>
+
+  <text x="230" y="24" font-size="21" font-weight="700" fill="#e05252" text-anchor="middle">Une interface fourre-tout</text>
+  <rect x="80" y="44" width="300" height="200" rx="8" fill="#fdf3f3" stroke="#e05252" stroke-width="3"/>
+  <text x="230" y="72" font-size="17" font-weight="700" fill="#e05252" text-anchor="middle">PasserelleDeCommunication</text>
+  <g font-size="15" fill="#5a6672">
+    <text x="100" y="102">envoyer_courriel()</text>
+    <text x="100" y="126">envoyer_sms()</text>
+    <text x="100" y="150">envoyer_notification_push()</text>
+    <text x="100" y="174">verifier_adresse()</text>
+    <text x="100" y="198">statistiques_d_envoi()</text>
+    <text x="100" y="222">purger_la_file()</text>
+  </g>
+  <rect x="80" y="272" width="300" height="60" rx="8" fill="#ffffff" stroke="#e05252" stroke-width="3"/>
+  <text x="230" y="298" font-size="16" font-weight="700" fill="#e05252" text-anchor="middle">La facturation</text>
+  <text x="230" y="320" font-size="15" fill="#e05252" text-anchor="middle">en utilise UNE sur six</text>
+  <line x1="230" y1="266" x2="230" y2="250" stroke="#5a6672" stroke-width="3" marker-end="url(#fi)"/>
+
+  <line x1="480" y1="40" x2="480" y2="340" stroke="#ccd3da" stroke-width="2"/>
+
+  <text x="730" y="24" font-size="21" font-weight="700" fill="#3aa76d" text-anchor="middle">Des protocoles du besoin</text>
+
+  <rect x="560" y="44" width="340" height="62" rx="8" fill="#f3f7f5" stroke="#3aa76d" stroke-width="3"/>
+  <text x="730" y="70" font-size="16" font-weight="700" fill="#3aa76d" text-anchor="middle">Expediteur</text>
+  <text x="730" y="93" font-size="15" fill="#3aa76d" text-anchor="middle">envoyer(destinataire, sujet, corps)</text>
+
+  <rect x="560" y="120" width="340" height="62" rx="8" fill="#f3f7f5" stroke="#3aa76d" stroke-width="3"/>
+  <text x="730" y="146" font-size="16" font-weight="700" fill="#3aa76d" text-anchor="middle">VerificateurDAdresse</text>
+  <text x="730" y="169" font-size="15" fill="#3aa76d" text-anchor="middle">est_valide(adresse)</text>
+
+  <rect x="560" y="196" width="340" height="62" rx="8" fill="#f3f7f5" stroke="#3aa76d" stroke-width="3"/>
+  <text x="730" y="222" font-size="16" font-weight="700" fill="#3aa76d" text-anchor="middle">Superviseur</text>
+  <text x="730" y="245" font-size="15" fill="#3aa76d" text-anchor="middle">statistiques()</text>
+
+  <rect x="560" y="286" width="340" height="46" rx="8" fill="#ffffff" stroke="#3aa76d" stroke-width="3"/>
+  <text x="730" y="315" font-size="16" font-weight="700" fill="#3aa76d" text-anchor="middle">La facturation ne connaît qu'Expediteur</text>
+  <line x1="730" y1="280" x2="730" y2="264" stroke="#5a6672" stroke-width="3" marker-end="url(#fi)"/>
+</svg>
