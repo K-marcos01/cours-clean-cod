@@ -91,3 +91,11 @@ def test_camion_encore_stationne_utilise_instant_present():
     montant = calculer_montant(entree, maintenant=maintenant)
 
     assert montant == 1.50
+
+def test_camion_electrique_et_abonne_cumule_les_avantages():
+    entree = datetime(2024, 1, 1, 8, 0)
+    sortie = datetime(2024, 1, 1, 9, 1)  # 61 minutes
+
+    montant = calculer_montant(entree, sortie, abonne=True, electrique=True)
+
+    assert montant == 0.90
