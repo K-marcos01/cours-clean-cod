@@ -1,0 +1,52 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 960 380" font-family="Helvetica,Arial,sans-serif">
+  <defs>
+    <marker id="fp" markerWidth="12" markerHeight="12" refX="10" refY="4" orient="auto">
+      <path d="M0,0 L10,4 L0,8 z" fill="#8a94a0"/>
+    </marker>
+  </defs>
+  <text x="170" y="24" font-size="19" font-weight="700" fill="#8a94a0" text-anchor="middle">Le principe</text>
+  <text x="560" y="24" font-size="19" font-weight="700" fill="#8a94a0" text-anchor="middle">La question qu'il pose</text>
+  <text x="860" y="24" font-size="19" font-weight="700" fill="#8a94a0" text-anchor="middle">Le pattern</text>
+
+  <g font-size="20" font-weight="700">
+    <rect x="40" y="40" width="260" height="52" rx="8" fill="#f2f6fa" stroke="#3d7ea6" stroke-width="2"/>
+    <text x="170" y="73" fill="#3d7ea6" text-anchor="middle">SRP</text>
+    <rect x="40" y="105" width="260" height="52" rx="8" fill="#f2f6fa" stroke="#3d7ea6" stroke-width="2"/>
+    <text x="170" y="138" fill="#3d7ea6" text-anchor="middle">OCP</text>
+    <rect x="40" y="170" width="260" height="52" rx="8" fill="#f2f6fa" stroke="#3d7ea6" stroke-width="2"/>
+    <text x="170" y="203" fill="#3d7ea6" text-anchor="middle">LSP</text>
+    <rect x="40" y="235" width="260" height="52" rx="8" fill="#f2f6fa" stroke="#3d7ea6" stroke-width="2"/>
+    <text x="170" y="268" fill="#3d7ea6" text-anchor="middle">ISP</text>
+    <rect x="40" y="300" width="260" height="52" rx="8" fill="#f2f6fa" stroke="#3d7ea6" stroke-width="2"/>
+    <text x="170" y="333" fill="#3d7ea6" text-anchor="middle">DIP</text>
+  </g>
+
+  <g font-size="16" fill="#1f2933">
+    <text x="330" y="72">qui demande ce changement ?</text>
+    <text x="330" y="137">comment ajouter sans rouvrir ?</text>
+    <text x="330" y="202">ce sous-type tient-il le contrat ?</text>
+    <text x="330" y="267">qui a besoin de quoi ?</text>
+    <text x="330" y="332">qui décide, qui exécute ?</text>
+  </g>
+
+  <g font-size="17" font-weight="700">
+    <rect x="720" y="40" width="230" height="52" rx="8" fill="#f3f7f5" stroke="#3aa76d" stroke-width="2"/>
+    <text x="835" y="72" fill="#3aa76d" text-anchor="middle">Observer</text>
+    <rect x="720" y="105" width="230" height="52" rx="8" fill="#f3f7f5" stroke="#3aa76d" stroke-width="2"/>
+    <text x="835" y="137" fill="#3aa76d" text-anchor="middle">Strategy, Decorator</text>
+    <rect x="720" y="170" width="230" height="52" rx="8" fill="#f3f7f5" stroke="#3aa76d" stroke-width="2"/>
+    <text x="835" y="202" fill="#3aa76d" text-anchor="middle">composition</text>
+    <rect x="720" y="235" width="230" height="52" rx="8" fill="#f3f7f5" stroke="#3aa76d" stroke-width="2"/>
+    <text x="835" y="267" fill="#3aa76d" text-anchor="middle">Facade</text>
+    <rect x="720" y="300" width="230" height="52" rx="8" fill="#f3f7f5" stroke="#3aa76d" stroke-width="2"/>
+    <text x="835" y="332" fill="#3aa76d" text-anchor="middle">Adapter, Factory</text>
+  </g>
+
+  <g stroke="#8a94a0" stroke-width="2">
+    <line x1="660" y1="66" x2="712" y2="66" marker-end="url(#fp)"/>
+    <line x1="660" y1="131" x2="712" y2="131" marker-end="url(#fp)"/>
+    <line x1="660" y1="196" x2="712" y2="196" marker-end="url(#fp)"/>
+    <line x1="660" y1="261" x2="712" y2="261" marker-end="url(#fp)"/>
+    <line x1="660" y1="326" x2="712" y2="326" marker-end="url(#fp)"/>
+  </g>
+</svg>

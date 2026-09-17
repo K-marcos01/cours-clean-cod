@@ -17,3 +17,6 @@ jour1/demos/demo-tdd/fizzbuzz-demo/
 # divers
 node_modules/
 .DS_Store
+
+# sortie locale du script de corrige, la version de reference est la branche tp1-corrige
+tp1/correction/tp1-corrige/

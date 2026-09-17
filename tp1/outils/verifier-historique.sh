@@ -117,12 +117,13 @@ else
       warn "impossible de rejouer $sha"
       continue
     fi
-    SORTIE="$(cd "$CIBLE" && python3 -m pytest -q 2>&1 | tail -1)"
+    SORTIE="$(cd "$CIBLE" && python3 -m pytest -q 2>&1)"
     CODE=$?
-    if echo "$SORTIE" | grep -qE "failed|error|no tests ran|ModuleNotFound"; then
-      ok "$sha est bien rouge   ($SORTIE)"
+    RESUME="$(echo "$SORTIE" | grep -iE "passed|failed|error|interrupted" | tail -1)"
+    if [ "$CODE" -ne 0 ]; then
+      ok "$sha est bien rouge   ($RESUME)"
     else
-      ko "$sha est VERT alors qu'il est annonce red   ($SORTIE)"
+      ko "$sha est VERT alors qu'il est annonce red   ($RESUME)"
       MENSONGES=$((MENSONGES + 1))
     fi
     REJOUES=$((REJOUES + 1))
@@ -157,6 +158,43 @@ for f in RAPPORT-QUALITE.md requirements-dev.txt .pre-commit-config.yaml verifie
     incr
   fi
 done
+
+# ---------------------------------------------------------------------------
+# ---------------------------------------------------------------------------
+titre "6. Rythme de travail"
+
+mapfile -t HORODATAGES < <(git -C "$DEPOT" log --reverse --format="%ct")
+NB="${#HORODATAGES[@]}"
+if [ "$NB" -ge 3 ]; then
+  ETENDUE=$(( (HORODATAGES[NB-1] - HORODATAGES[0]) / 60 ))
+  ECARTS=()
+  for ((i = 1; i < NB; i++)); do
+    ECARTS+=( $(( HORODATAGES[i] - HORODATAGES[i-1] )) )
+  done
+  MEDIANE=$(printf '%s\n' "${ECARTS[@]}" | sort -n \
+    | awk '{a[NR]=$1} END {print (NR % 2) ? a[(NR+1)/2] : int((a[NR/2] + a[NR/2+1]) / 2)}')
+  TRES_COURTS=$(printf '%s\n' "${ECARTS[@]}" | awk '$1 < 30' | wc -l)
+  LONGS=$(printf '%s\n' "${ECARTS[@]}" | awk '$1 > 900' | wc -l)
+
+  echo "  etendue de l'historique       : $ETENDUE minutes"
+  echo "  ecart median entre 2 commits  : ${MEDIANE}s"
+  echo "  ecarts de moins de 30 secondes: $TRES_COURTS sur ${#ECARTS[@]}"
+  echo "  ecarts de plus de 15 minutes  : $LONGS sur ${#ECARTS[@]}"
+
+  if [ "$ETENDUE" -lt 60 ]; then
+    warn "moins d'une heure entre le premier et le dernier commit, pour un TP de 5 heures"
+  else
+    ok "l'historique s'etale sur $ETENDUE minutes"
+  fi
+  if [ "${#ECARTS[@]}" -gt 0 ] && [ $(( TRES_COURTS * 100 / ${#ECARTS[@]} )) -gt 70 ]; then
+    warn "plus de 70 pour cent des commits sont espaces de moins de 30 secondes"
+  fi
+  if [ "$LONGS" -gt $(( NB / 4 )) ]; then
+    warn "beaucoup de trous de plus de 15 minutes, les pas sont probablement trop grands"
+  fi
+else
+  warn "trop peu de commits pour analyser le rythme"
+fi
 
 # ---------------------------------------------------------------------------
 titre "Bilan"

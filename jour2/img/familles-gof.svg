@@ -1,0 +1,49 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 960 420" font-family="Helvetica,Arial,sans-serif">
+  <rect x="10" y="10" width="300" height="400" rx="10" fill="#fbf7fd" stroke="#8e5ea2" stroke-width="3"/>
+  <text x="160" y="42" font-size="21" font-weight="700" fill="#8e5ea2" text-anchor="middle">Créationnels</text>
+  <text x="160" y="66" font-size="15" fill="#8a94a0" text-anchor="middle">comment un objet naît</text>
+  <g font-size="17" fill="#5a6672">
+    <rect x="30" y="80" width="260" height="34" rx="6" fill="#8e5ea2"/>
+    <text x="160" y="104" font-weight="700" fill="#ffffff" text-anchor="middle">Factory Method</text>
+    <text x="160" y="140" text-anchor="middle">Abstract Factory</text>
+    <text x="160" y="170" text-anchor="middle">Builder</text>
+    <text x="160" y="200" text-anchor="middle">Prototype</text>
+    <text x="160" y="230" text-anchor="middle">Singleton</text>
+  </g>
+  <text x="160" y="266" font-size="15" font-style="italic" fill="#8a94a0" text-anchor="middle">5 patterns</text>
+
+  <rect x="330" y="10" width="300" height="400" rx="10" fill="#f2f6fa" stroke="#3d7ea6" stroke-width="3"/>
+  <text x="480" y="42" font-size="21" font-weight="700" fill="#3d7ea6" text-anchor="middle">Structurels</text>
+  <text x="480" y="66" font-size="15" fill="#8a94a0" text-anchor="middle">comment on assemble</text>
+  <g font-size="17" fill="#5a6672">
+    <rect x="350" y="80" width="260" height="34" rx="6" fill="#3d7ea6"/>
+    <text x="480" y="104" font-weight="700" fill="#ffffff" text-anchor="middle">Adapter</text>
+    <rect x="350" y="120" width="260" height="34" rx="6" fill="#3d7ea6"/>
+    <text x="480" y="144" font-weight="700" fill="#ffffff" text-anchor="middle">Decorator</text>
+    <text x="480" y="180" text-anchor="middle">Facade</text>
+    <text x="480" y="210" text-anchor="middle">Composite</text>
+    <text x="480" y="240" text-anchor="middle">Proxy</text>
+    <text x="480" y="270" text-anchor="middle">Bridge</text>
+    <text x="480" y="300" text-anchor="middle">Flyweight</text>
+  </g>
+  <text x="480" y="336" font-size="15" font-style="italic" fill="#8a94a0" text-anchor="middle">7 patterns</text>
+
+  <rect x="650" y="10" width="300" height="400" rx="10" fill="#f3f7f5" stroke="#3aa76d" stroke-width="3"/>
+  <text x="800" y="42" font-size="21" font-weight="700" fill="#3aa76d" text-anchor="middle">Comportementaux</text>
+  <text x="800" y="66" font-size="15" fill="#8a94a0" text-anchor="middle">comment on se répartit le travail</text>
+  <g font-size="17" fill="#5a6672">
+    <rect x="670" y="80" width="260" height="34" rx="6" fill="#3aa76d"/>
+    <text x="800" y="104" font-weight="700" fill="#ffffff" text-anchor="middle">Strategy</text>
+    <rect x="670" y="120" width="260" height="34" rx="6" fill="#3aa76d"/>
+    <text x="800" y="144" font-weight="700" fill="#ffffff" text-anchor="middle">Observer</text>
+    <rect x="670" y="160" width="260" height="34" rx="6" fill="#3aa76d"/>
+    <text x="800" y="184" font-weight="700" fill="#ffffff" text-anchor="middle">Template Method</text>
+    <text x="800" y="220" text-anchor="middle">Command</text>
+    <text x="800" y="248" text-anchor="middle">State</text>
+    <text x="800" y="276" text-anchor="middle">Iterator</text>
+    <text x="800" y="304" text-anchor="middle">Chain of Responsibility</text>
+    <text x="800" y="332" text-anchor="middle">Mediator, Memento,</text>
+    <text x="800" y="356" text-anchor="middle">Visitor, Interpreter</text>
+  </g>
+  <text x="800" y="392" font-size="15" font-style="italic" fill="#8a94a0" text-anchor="middle">11 patterns</text>
+</svg>

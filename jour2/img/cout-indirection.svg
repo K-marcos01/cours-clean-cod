@@ -1,0 +1,30 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 960 400" font-family="Helvetica,Arial,sans-serif">
+  <line x1="90" y1="330" x2="880" y2="330" stroke="#1f2933" stroke-width="2"/>
+  <line x1="90" y1="30"  x2="90"  y2="330" stroke="#1f2933" stroke-width="2"/>
+  <text x="96" y="24" font-size="16" fill="#8a94a0">coût total de possession</text>
+  <text x="620" y="366" font-size="17" fill="#1f2933">nombre de variantes de la règle</text>
+
+  <g font-size="15" fill="#8a94a0">
+    <text x="150" y="352">1</text><text x="255" y="352">2</text>
+    <text x="360" y="352">3</text><text x="465" y="352">4</text>
+    <text x="570" y="352">5</text><text x="675" y="352">6</text>
+  </g>
+
+  <polyline fill="none" stroke="#e05252" stroke-width="5"
+    points="155,296 260,266 365,222 470,166 575,102 680,50"/>
+  <polyline fill="none" stroke="#3aa76d" stroke-width="5"
+    points="155,200 260,196 365,192 470,190 575,188 680,186"/>
+
+  <line x1="368" y1="30" x2="368" y2="330" stroke="#5a6672" stroke-width="2" stroke-dasharray="7 5"/>
+  <circle cx="366" cy="207" r="9" fill="#5a6672"/>
+  <text x="384" y="62" font-size="19" font-weight="700" fill="#5a6672">le croisement</text>
+  <text x="384" y="86" font-size="16" fill="#5a6672">c'est la règle de trois</text>
+
+  <text x="700" y="46" font-size="17" font-weight="700" fill="#e05252">enchaînement de if</text>
+  <text x="700" y="182" font-size="17" font-weight="700" fill="#3aa76d">Strategy</text>
+
+  <text x="115" y="170" font-size="15" fill="#3aa76d">coût</text>
+  <text x="112" y="190" font-size="15" fill="#3aa76d">d'entrée</text>
+
+  <text x="90" y="392" font-size="17" fill="#1f2933">À gauche du trait, le pattern vous coûte plus cher qu'il ne vous rapporte.</text>
+</svg>

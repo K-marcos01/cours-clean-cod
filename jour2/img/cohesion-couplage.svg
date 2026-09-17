@@ -1,0 +1,28 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 960 360" font-family="Helvetica,Arial,sans-serif">
+  <text x="300" y="24" font-size="19" font-weight="700" fill="#1f2933" text-anchor="middle">Couplage faible</text>
+  <text x="700" y="24" font-size="19" font-weight="700" fill="#1f2933" text-anchor="middle">Couplage fort</text>
+  <text x="70" y="102" font-size="19" font-weight="700" fill="#1f2933" text-anchor="middle">Cohésion</text>
+  <text x="70" y="126" font-size="19" font-weight="700" fill="#1f2933" text-anchor="middle">forte</text>
+  <text x="70" y="262" font-size="19" font-weight="700" fill="#1f2933" text-anchor="middle">Cohésion</text>
+  <text x="70" y="286" font-size="19" font-weight="700" fill="#1f2933" text-anchor="middle">faible</text>
+
+  <rect x="150" y="38" width="300" height="140" rx="8" fill="#f3f7f5" stroke="#3aa76d" stroke-width="4"/>
+  <text x="300" y="92" font-size="21" font-weight="700" fill="#3aa76d" text-anchor="middle">L'objectif</text>
+  <text x="300" y="124" font-size="16" fill="#3aa76d" text-anchor="middle">chaque module fait une chose,</text>
+  <text x="300" y="148" font-size="16" fill="#3aa76d" text-anchor="middle">et connaît peu les autres</text>
+
+  <rect x="510" y="38" width="300" height="140" rx="8" fill="#fdf8ef" stroke="#e8b04b" stroke-width="3"/>
+  <text x="660" y="92" font-size="21" font-weight="700" fill="#b8860b" text-anchor="middle">Modules soudés</text>
+  <text x="660" y="124" font-size="16" fill="#b8860b" text-anchor="middle">bien écrits chacun,</text>
+  <text x="660" y="148" font-size="16" fill="#b8860b" text-anchor="middle">impossibles à séparer</text>
+
+  <rect x="150" y="198" width="300" height="140" rx="8" fill="#fdf8ef" stroke="#e8b04b" stroke-width="3"/>
+  <text x="300" y="252" font-size="21" font-weight="700" fill="#b8860b" text-anchor="middle">Fourre-tout isolés</text>
+  <text x="300" y="284" font-size="16" fill="#b8860b" text-anchor="middle">un utils.py qui grossit,</text>
+  <text x="300" y="308" font-size="16" fill="#b8860b" text-anchor="middle">mais qui ne casse rien</text>
+
+  <rect x="510" y="198" width="300" height="140" rx="8" fill="#fdf3f3" stroke="#e05252" stroke-width="4"/>
+  <text x="660" y="252" font-size="21" font-weight="700" fill="#e05252" text-anchor="middle">Le plat de spaghettis</text>
+  <text x="660" y="284" font-size="16" fill="#e05252" text-anchor="middle">personne ne sait où</text>
+  <text x="660" y="308" font-size="16" fill="#e05252" text-anchor="middle">une règle est écrite</text>
+</svg>

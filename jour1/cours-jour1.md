@@ -31,6 +31,7 @@ style: |
   section.compare h4:nth-of-type(2) { break-before: column; }
   section.compare pre, section.compare ul, section.compare p, section.compare table { break-inside: avoid; }
   section.compare pre { font-size: 16px; }
+  section.compare blockquote { column-span: all; margin-top: 14px; font-size: 24px; }
   section.compare table { font-size: 19px; }
   section.lead { background: #1f2933; color: #ffffff; }
   section.lead h1 { color: #ffffff; font-size: 56px; }
@@ -1083,15 +1084,29 @@ git log --format=format: --name-only \
 ---
 
 ## Ce que vous devrez remplir au TP
-### Une ligne par fichier, avant et après
+### Une colonne, une définition, une commande
 
-| Fichier | Lignes | CC max | CC moy | IM | Duplication | Couverture | pylint |
-|---|---|---|---|---|---|---|---|
-| avant | | | | | | | |
-| après | | | | | | | |
+| Colonne | Ce que c'est | Commande qui la produit |
+|---|---|---|
+| Lignes | lignes de code réelles, hors blancs et commentaires | `radon raw` |
+| CC max | **complexité cyclomatique** de la pire fonction | `radon cc -s` |
+| CC moy | **complexité cyclomatique** moyenne du fichier | `radon cc -a` |
+| IM | **indice de maintenabilité**, rang A, B ou C | `radon mi -s` |
+| Duplication | part de lignes dupliquées | `pylint --enable=duplicate-code` |
+| Couverture | branches réellement exécutées par les tests | `pytest --cov-branch` |
+| pylint | note globale sur 10 | `pylint` |
 
-- « J'ai rendu le code plus propre » : **pas crédible**
-- « La complexité max est passée de 35 à 4, la couverture de 0 à 91 % » : **crédible**
+> Une ligne **avant** le refactoring, une ligne **après**. Un chiffre sans sa commande n'est pas un chiffre, c'est une affirmation.
+
+---
+
+## Pourquoi ce tableau décide de votre note
+### La différence entre un avis et un diagnostic
+
+- « J'ai rendu le code plus propre » : **pas crédible**, personne ne peut le vérifier
+- « La complexité cyclomatique max est passée de **35 à 4** et la couverture de branches de **0 à 91 %** » : **crédible**, tout le monde peut le rejouer
+
+> Un ingénieur qui ne mesure pas son avant ne peut pas prouver son après.
 
 ---
 

@@ -1,0 +1,25 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 960 330" font-family="Helvetica,Arial,sans-serif">
+  <rect x="10" y="10" width="460" height="145" rx="8" fill="#fdf3f3" stroke="#e05252" stroke-width="3"/>
+  <text x="32" y="48" font-size="24" font-weight="700" fill="#e05252">Rigidité</text>
+  <text x="32" y="82" font-size="17" fill="#1f2933">Un changement simple oblige à en faire</text>
+  <text x="32" y="106" font-size="17" fill="#1f2933">une cascade d'autres.</text>
+  <text x="32" y="138" font-size="16" font-style="italic" fill="#8a94a0">« je touche à ça et il faut tout retester »</text>
+
+  <rect x="490" y="10" width="460" height="145" rx="8" fill="#fdf3f3" stroke="#e05252" stroke-width="3"/>
+  <text x="512" y="48" font-size="24" font-weight="700" fill="#e05252">Fragilité</text>
+  <text x="512" y="82" font-size="17" fill="#1f2933">Une modification casse quelque chose</text>
+  <text x="512" y="106" font-size="17" fill="#1f2933">qui n'a aucun rapport.</text>
+  <text x="512" y="138" font-size="16" font-style="italic" fill="#8a94a0">« j'ai changé la TVA, l'export PDF est cassé »</text>
+
+  <rect x="10" y="175" width="460" height="145" rx="8" fill="#fdf8ef" stroke="#e8b04b" stroke-width="3"/>
+  <text x="32" y="213" font-size="24" font-weight="700" fill="#b8860b">Immobilité</text>
+  <text x="32" y="247" font-size="17" fill="#1f2933">On ne peut pas réutiliser un morceau</text>
+  <text x="32" y="271" font-size="17" fill="#1f2933">ailleurs sans emporter tout le reste.</text>
+  <text x="32" y="303" font-size="16" font-style="italic" fill="#8a94a0">« pour ça il faudrait importer la base »</text>
+
+  <rect x="490" y="175" width="460" height="145" rx="8" fill="#fdf8ef" stroke="#e8b04b" stroke-width="3"/>
+  <text x="512" y="213" font-size="24" font-weight="700" fill="#b8860b">Viscosité</text>
+  <text x="512" y="247" font-size="17" fill="#1f2933">Faire les choses proprement coûte plus</text>
+  <text x="512" y="271" font-size="17" fill="#1f2933">cher que les bricoler.</text>
+  <text x="512" y="303" font-size="16" font-style="italic" fill="#8a94a0">« un if de plus ici, et c'est réglé »</text>
+</svg>

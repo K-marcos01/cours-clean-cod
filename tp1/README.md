@@ -81,6 +81,218 @@ au bout de 10 minutes, c'est que ton pas est trop grand. Reviens en arrière.
 
 ---
 
+## Commiter : quand, quoi, comment
+
+C'est la partie du TP qui pose le plus de questions. Lis-la en entier avant la mission 2.
+
+### Le réflexe qui bloque tout le monde
+
+**Oui, tu commites du code qui ne marche pas.**
+
+Un commit `red:` enregistre un état où la suite de tests est rouge. C'est volontaire,
+c'est la moitié de la preuve qu'on te demande, et c'est ce que le correcteur va rejouer.
+
+Un dépôt git n'est pas une vitrine, c'est un journal de bord. Personne ne va déployer en
+production depuis ton commit `red:`. Il sert à montrer que le test existait **avant** le
+code qui le fait passer.
+
+Si tu attends d'avoir quelque chose de propre pour commiter, tu n'auras pas d'historique,
+tu auras un résumé. Et un résumé ne prouve rien.
+
+### Un cycle complet, commande par commande
+
+Voilà exactement ce que tu tapes pour un tour de TDD. Rien de plus, rien de moins.
+
+```bash
+# 1. tu écris le test dans test_parking.py, puis tu le lances
+pytest -q
+# 1 failed  <- tu DOIS voir ça avant de continuer
+
+# 2. tu commites le test seul
+git add test_parking.py
+git commit -m "red: un stationnement de 30 minutes est gratuit"
+
+# 3. tu écris le minimum de code dans parking.py, puis tu relances
+pytest -q
+# 1 passed
+
+# 4. tu commites le code seul
+git add parking.py
+git commit -m "green: un stationnement de 30 minutes est gratuit"
+```
+
+Le même texte après `red:` et après `green:`. Ce n'est pas une erreur, c'est ce qui rend
+les paires lisibles dans `git log --oneline`.
+
+### Pourquoi on écrit `git add <fichier>` et pas `git add -A`
+
+Parce que `git add -A` ramasse tout ce qui traîne, y compris le fichier de production que
+tu viens de créer par réflexe. Ton commit `red:` contiendra alors du code de production,
+et le script de vérification le signalera.
+
+Nomme tes fichiers explicitement. En cas de doute, regarde avant de valider :
+
+```bash
+git status --short
+git diff --staged --stat
+```
+
+### Ce que chaque commit a le droit de contenir
+
+| Préfixe | Ce qui entre | Ce qui n'entre jamais |
+|---|---|---|
+| `red:` | uniquement des fichiers `test_*.py` et `conftest.py` | tout fichier de production, même vide |
+| `green:` | uniquement le code de production | aucun test, même un petit |
+| `refactor:` | uniquement le code de production | aucun test, aucun changement de comportement |
+| `test:` | uniquement des tests | aucun code de production |
+| `fix:` | uniquement le code de production | aucun test |
+| `chore:` | `.gitignore`, `pyproject.toml`, `requirements-dev.txt`, `README`, `__init__.py` | du code métier, un test |
+
+Le piège le plus fréquent : créer un `__init__.py` ou un fichier vide en même temps que
+ton premier test. Pour le script de correction, c'est un fichier de production dans un
+commit `red:`. Crée toute la structure de dossiers **avant**, dans un commit `chore:`.
+
+Autre piège : au tout premier tour d'un kata, ton test importe un module qui n'existe pas
+encore. Ne crée pas le fichier pour faire plaisir à l'import. L'erreur
+`ModuleNotFoundError` **est** un rouge valide.
+
+### Quand ajouter un commit `refactor:`
+
+Pas à chaque tour. Seulement quand tu as réellement amélioré la structure.
+
+Tu en ajoutes un quand tu viens de renommer quelque chose, d'extraire une fonction, de
+remplacer un nombre magique par une constante, ou de supprimer une duplication qui
+venait d'apparaître.
+
+Tu n'en ajoutes pas quand tu n'as rien changé d'autre que le code strictement nécessaire
+au test. Un cycle sans refactoring est un cycle normal.
+
+Un TP correct contient à peu près un `refactor:` pour trois ou quatre paires
+`red:` puis `green:`.
+
+### Comment écrire le message
+
+Le message décrit **le comportement**, pas le code que tu viens de taper.
+
+| À éviter | Pourquoi | À écrire plutôt |
+|---|---|---|
+| `red: test` | ne dit rien | `red: 30 minutes ou moins est gratuit` |
+| `green: ajout if` | décrit le code | `green: 30 minutes ou moins est gratuit` |
+| `red: correction bug` | on ne sait pas lequel | `red: un article au seuil est en alerte` |
+| `green: E3` | le correcteur n'a pas le sujet sous les yeux | `green: plafond de 18 euros par journée` |
+| `refactor: nettoyage` | trop vague | `refactor: extraction du calcul des tranches` |
+
+Règle simple : ton `git log --oneline` doit se lire comme le cahier des charges du kata.
+Si quelqu'un qui n'a pas le sujet ne comprend pas ce que fait ton programme en lisant
+seulement tes messages, ils sont mauvais.
+
+Pas de point final, pas de majuscule après les deux points, une seule ligne suffit.
+
+### À quelle fréquence, mission par mission
+
+| Mission | Préfixes attendus | Nombre de commits, ordre de grandeur |
+|---|---|---|
+| 0, l'atelier | `chore:` | 1 à 3 |
+| 1, l'audit | `chore:` | 1 à 2 |
+| 2, le kata en TDD | `red:`, `green:`, `refactor:` | 25 à 45 |
+| 3, le filet puis la chirurgie | `test:` puis `refactor:` | 15 à 30 |
+| 4, le garde-fou | `chore:` | 2 à 4 |
+| 5, les bugs | `red:` puis `fix:` | 4 à 8 |
+
+Un TP1 complet, c'est entre **50 et 90 commits**. Si tu en as 12, tu n'as pas fait de TDD,
+tu as fait du développement classique en mettant des préfixes dessus.
+
+Règle de rythme : si tu passes plus de dix minutes sans rien commiter, ton pas est trop
+grand. Reviens en arrière et redécoupe.
+
+### Les cas particuliers que tu vas rencontrer
+
+**Mon test passe du premier coup, sans que j'aie écrit de code.**
+Tu utilises `test:`, pas `red:` suivi de `green:`. Ça arrive légitimement en mission 3,
+quand tu décris un comportement qui existe déjà. Ça ne doit jamais arriver en mission 2 :
+si ça arrive, c'est que ton test ne teste pas ce que tu crois.
+
+**J'ai oublié de commiter et j'ai enchaîné trois cycles.**
+Tu ne peux pas inventer l'historique après coup, et tu ne dois pas essayer. Commite ce
+que tu as en un seul `green:` honnête, note-le dans ton rapport, et reprends le rythme au
+cycle suivant. Tu perds les points de ces trois cycles, pas ceux des quarante autres.
+
+**J'ai mis du code de production dans un commit `red:`, et je m'en aperçois tout de
+suite.** Tant que tu n'as rien poussé, corrige :
+
+```bash
+git reset --soft HEAD~1      # le commit disparaît, tes fichiers restent
+git restore --staged .        # tu vides la zone d'index
+git add test_parking.py       # tu ne reprends que le test
+git commit -m "red: ..."
+```
+
+**Je me suis trompé dans le message du dernier commit.**
+
+```bash
+git commit --amend -m "red: le bon message"
+```
+
+Autorisé sur le dernier commit, tant que tu n'as pas poussé. On ne réécrit pas plus loin.
+
+**Mon refactoring casse un test.**
+Ne commite pas. C'est l'information que tu cherchais : tu as changé un comportement, donc
+ce n'était pas un refactoring. Annule le dernier pas et refais-en un plus petit.
+
+```bash
+git restore .                 # tu reviens au dernier commit, qui était vert
+```
+
+**Je suis bloqué au rouge depuis vingt minutes.**
+
+```bash
+git stash                     # tu mets ton travail de côté
+pytest -q                     # tu vérifies que tu repars d'un état vert
+```
+
+Puis tu réécris un test plus petit. Tu récupéreras le reste plus tard avec
+`git stash pop`, ou tu le jetteras avec `git stash drop`.
+
+### La checklist de dix secondes avant chaque commit
+
+1. J'ai lancé `pytest` et j'ai vu le résultat de mes yeux
+2. Le préfixe correspond à ce que je viens de faire
+3. `git status --short` ne montre que les fichiers que je veux
+4. Mon message décrit un comportement métier, pas une ligne de code
+5. Si c'est un `green:`, il y a bien un `red:` juste avant
+
+### Ce qu'on ne commite jamais
+
+Le dossier `.venv`, les `__pycache__`, les `.pytest_cache`, les `.coverage` et les
+`htmlcov`. C'est le rôle du `.gitignore` de la mission 0.
+
+Un fichier de mot de passe, une clé d'API, un fichier de configuration personnel.
+
+Du code commenté. Tu as git, c'est exactement à ça qu'il sert.
+
+### À quoi ressemble un historique correct
+
+```
+a1b2c3d chore: garde-fou pre-commit et preuve de blocage
+f4e5d6c fix: la remise s'applique a partir de 100 unites incluses
+9c8b7a6 red: une commande de 100 unites beneficie de la remise
+5d4e3f2 refactor: extraction de la verification de quantite
+1a2b3c4 green: un retrait refuse laisse le stock intact
+8f7e6d5 red: un retrait refuse laisse le stock intact
+...
+3c2b1a0 green: 30 minutes ou moins est gratuit
+7b6a5c4 red: 30 minutes ou moins est gratuit
+0f1e2d3 chore: structure du projet et outils de qualite
+```
+
+On y voit le rythme, la taille des pas, l'alternance, et le fait que le test précède
+toujours le code. C'est ça qu'on note.
+
+Le correcteur regarde aussi les **horodatages**. Un TP dont les soixante commits sont
+espacés de quinze secondes a été fabriqué à la fin, et ça se voit en une commande.
+
+---
+
 ## Ce que tu dois savoir avant de commencer
 
 Ces éléments sont tous détaillés dans le support du jour 1. Si l'un d'eux ne te dit

@@ -1,0 +1,28 @@
+[tool.ruff]
+line-length = 100
+target-version = "py311"
+
+[tool.ruff.lint]
+select = ["E", "F", "W", "I", "N", "UP", "B", "C90", "SIM", "RET", "ARG", "PL"]
+ignore = ["PLR2004", "N818"]  # N818 impose un suffixe Error, incompatible avec des noms francais
+
+[tool.ruff.lint.mccabe]
+max-complexity = 8
+
+[tool.ruff.lint.pylint]
+max-args = 4
+max-branches = 10
+max-statements = 30
+
+[tool.pytest.ini_options]
+addopts = "-q"
+pythonpath = ["inventaire", "kata_parking"]
+python_files = ["test_*.py"]
+
+[tool.coverage.run]
+branch = true
+omit = ["*/test_*.py"]
+
+[tool.coverage.report]
+show_missing = true
+fail_under = 90
