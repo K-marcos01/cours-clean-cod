@@ -37,7 +37,7 @@ radon cc -s -a inventaire.py
 | Mesure | Valeur | Commande |
 |---|---|---|
 | Lignes de code réelles | 161 | radon raw inventaire.py |
-| Complexité moyenne | B (5.9) |  ` | radon cc -s -a inventaire.py |
+| Complexité moyenne | B (5.9) | `radon cc -s -a inventaire.py` |
 | Indice de maintenabilité | A (36.80) | radon mi -s inventaire.py |
 | Score pylint | 7.76/10 | pylint inventaire.py |
 | Problèmes ruff | 14 | ruff check inventaire.py |
