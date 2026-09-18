@@ -97,17 +97,26 @@ L'étiquette `depart-tp2` posée sur ce premier commit.
 Lis `depart/README.md`. Il contient les **neuf règles métier** de l'application. Elles
 font foi pendant toute la séance. Quand le code s'en écarte, c'est le code qui a tort.
 
-Lance aussi le code pour voir ce qu'il fait :
+Lance aussi le code pour voir ce qu'il fait. Un fichier `essai.py` à la racine, que tu
+supprimeras ensuite :
 
-```bash
-python3 -c "
+```python
 from datetime import date
+
 from facturation.abonnements import Abonnement
 from facturation.facture import EmetteurDeFactures
-a = Abonnement('Dupont SARL', 'pro', 12, date(2026, 1, 1))
-print(EmetteurDeFactures().emettre(a, 'compta@dupont.fr'))
-"
+
+abonnement = Abonnement("Dupont SARL", "pro", 12, date(2026, 1, 1))
+print(EmetteurDeFactures().emettre(abonnement, "compta@dupont.fr"))
 ```
+
+```bash
+python essai.py
+```
+
+Un fichier plutôt qu'un `python -c` d'une ligne : sous Windows, `cmd` ne sait pas
+découper une chaîne entre guillemets sur plusieurs lignes, et la commande échoue avec
+une erreur de syntaxe.
 
 **Critère d'acceptation.** `git tag` affiche `depart-tp2`, `pytest` est vert,
 `git status` est propre.

@@ -24,6 +24,7 @@ jour2/                  les cinq principes SOLID
 tp2/                    5 h, cinq violations dans un code en service
   README.md             l'énoncé des 6 missions et le barème
   depart/               l'application de facturation, 25 tests verts
+  correction/           le script qui produit la branche tp2-corrige
   modeles/              le squelette du rapport de conception
   outils/               vérification de l'extension additive
 ```
@@ -89,6 +90,19 @@ tp2/outils/verifier-ocp.sh        /chemin/vers/le/depot
 Le premier rejoue des commits `red:` tirés au hasard et vérifie qu'ils sont réellement
 rouges. Le second compare les étiquettes `ouverture-terminee` et `HEAD` et refuse toute
 ligne supprimée dans un fichier métier existant.
+
+## Le corrigé du TP2
+
+Branche `tp2-corrige`, 7 commits pour les missions 0 et 1. Les messages portent une
+étiquette `[Mission 0]`, `[Partie 1]`, `[Partie 2] D1` et ainsi de suite.
+
+```bash
+git log --oneline origin/tp2-corrige
+git show origin/tp2-corrige:RAPPORT-CONCEPTION.md
+```
+
+Le script vérifie lui-même qu'aucun fichier Python n'a bougé pendant le diagnostic, ce
+que la mission 1 interdit. Détail du débrief dans `tp2/correction/README.md`.
 
 ## Le fil des quatre jours
 

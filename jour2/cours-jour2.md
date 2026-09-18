@@ -742,6 +742,62 @@ def appliquer_code_promo(montant, code, contexte):
 
 ---
 
+## Trois formes de la même violation
+### La forme décide de la technique d'ouverture
+
+| Ce qui varie | Forme | Comment on l'ouvre |
+|---|---|---|
+| un catalogue de **valeurs** indépendantes | aiguillage sur une clé | un **dictionnaire** |
+| un catalogue de **comportements** | aiguillage, chaque cas a sa logique | un **registre de fonctions** |
+| une **échelle ordonnée** de seuils | cascade dont l'ordre **est** la règle | une **table triée** |
+
+Dans les deux premières, les cas sont **indépendants** : ajouter une formule ne change rien aux autres.
+
+Dans la troisième, ils forment une **échelle**. L'ordre des `if` encode « du palier le plus haut vers le plus bas », et cette règle n'est écrite nulle part.
+
+---
+
+<!-- _class: compare -->
+
+## La troisième forme, l'échelle de paliers
+### Quand l'ordre des if porte la règle
+
+#### La cascade
+
+```python
+def taux_de_remise_volume(n):
+    if n >= 50:
+        return 0.20
+    if n >= 10:
+        return 0.10
+    return 0.0
+```
+
+Intervertissez les deux `if` : un abonnement de 200 postes obtient **10 %** au lieu de 20.
+
+#### La table triée
+
+```python
+PALIERS = []
+
+
+def palier(seuil, taux):
+    PALIERS.append((seuil, taux))
+
+
+def taux_de_remise_volume(n):
+    for seuil, taux in sorted(PALIERS, reverse=True):
+        if n >= seuil:
+            return taux
+    return 0.0
+```
+
+Le `sorted` rend la règle **explicite**, et l'ordre d'insertion cesse d'avoir de l'importance.
+
+> Ajouter un palier devient `palier(200, 0.30)` dans un fichier neuf, sans avoir à se demander où l'insérer.
+
+---
+
 <!-- _class: compare -->
 
 ## Exemple 3, la TVA par pays
